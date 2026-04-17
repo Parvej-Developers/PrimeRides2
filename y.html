@@ -1,0 +1,2144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Car Details</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
+
+      :root {
+        --bg: #f9fafb;
+        --card: #ffffff;
+        --muted: #6b7280;
+        --text: #0f172a;
+        --primary: #2563eb;
+        --radius: 12px;
+        --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.08);
+        --line: #e6e9ee;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        opacity: 0;
+        transition: opacity 0.8s ease-in-out;
+        font-family: "Mulish", sans-serif;
+      }
+
+      /* Scrollbar Styling */
+      ::-webkit-scrollbar {
+        width: 15px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: #2563eb;
+      }
+
+      ::-webkit-scrollbar-track {
+        background-color: rgba(0, 0, 0, 0.6);
+        width: 50px;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        outline: none;
+        border: none;
+        font-size: 1rem;
+        color: #ffffff;
+        background-color: #2563eb;
+        white-space: nowrap;
+        border-radius: 4px;
+        transition: 0.3s;
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        background-color: #3c4286;
+      }
+
+      a {
+        text-decoration: none;
+        transition: 0.3s;
+      }
+
+      ul {
+        list-style: none;
+      }
+
+      html,
+      body {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Mulish", sans-serif;
+      }
+
+      /* Header */
+      header {
+        position: relative;
+      }
+
+      header::before {
+        position: absolute;
+        content: "";
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+
+      nav {
+        position: fixed;
+        isolation: isolate;
+        width: 100%;
+        z-index: 9;
+        top: 0;
+        left: 0;
+      }
+
+      .nav__header {
+        padding: 1rem;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #2563eb;
+      }
+
+      .nav__logo a {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      .nav__menu__btn {
+        font-size: 1.5rem;
+        color: #ffffff;
+        cursor: pointer;
+      }
+
+      .nav__links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 2rem;
+        background-color: #2563eb;
+        transition: 0.5s;
+        z-index: -1;
+        transform: translateY(-100%);
+      }
+
+      .nav__links.open {
+        transform: translateY(0);
+      }
+
+      .nav__links a {
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      .nav__links .btn {
+        padding: 0;
+        background-color: transparent;
+      }
+
+      .nav__btns {
+        display: none;
+      }
+
+      /* Login & Signup form */
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        z-index: 1000;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+      }
+
+      .overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* Modal */
+      .modal {
+        background: #f8fafc;
+        padding: 40px;
+        border-radius: 16px;
+        width: 350px;
+        max-width: 90%;
+        transform: scale(0.7) translateY(50px);
+        opacity: 0;
+        transition: all 0.4s ease;
+      }
+
+      .overlay.active .modal {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+
+      .modal h2 {
+        margin-bottom: 20px;
+        text-align: center;
+        color: #1e3a8a;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-bottom: 2px solid #cbd5e1;
+        outline: none;
+        background: transparent;
+        font-size: 15px;
+        transition: 0.3s;
+      }
+
+      .form-group input:focus {
+        border-color: #2563eb;
+      }
+
+      .modal button.submit-btn {
+        width: 100%;
+        margin-top: 10px;
+        background: #2563eb;
+        color: #fff;
+        border-radius: 8px;
+        padding: 12px 20px;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 10px;
+        transition: 0.3s;
+        font-weight: 600;
+      }
+
+      .modal button.submit-btn:hover {
+        background: #1e3a8a;
+        color: #fff;
+      }
+
+      .toggle-text {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 14px;
+        color: #555;
+      }
+
+      .toggle-text span {
+        color: #2563eb;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      /* Booking Modal Styles */
+      .booking-modal {
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 20px;
+        width: 95%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        transform: scale(0.8) translateY(30px);
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(10px);
+      }
+
+      .overlay.active .booking-modal {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f1f5f9;
+      }
+
+      .modal-header h2 {
+        color: #1e293b;
+        font-size: 24px;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .close-modal {
+        background: none;
+        border: none;
+        font-size: 28px;
+        color: #64748b;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 50%;
+        transition: all 0.2s;
+      }
+
+      .close-modal:hover {
+        background: #f1f5f9;
+        color: #1e293b;
+      }
+
+      .car-info {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 25px;
+        border: 1px solid #e2e8f0;
+      }
+
+      .car-info h3 {
+        color: #1e293b;
+        font-size: 18px;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
+      .car-details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+
+      .car-detail-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #475569;
+      }
+
+      .car-detail-item i {
+        color: #2563eb;
+        font-size: 16px;
+      }
+
+      .booking-form {
+        display: grid;
+        gap: 20px;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+
+      .form-field {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-field label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 6px;
+      }
+
+      .form-field input,
+      .form-field select {
+        padding: 12px 15px;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 14px;
+        transition: all 0.2s;
+        background: #ffffff;
+      }
+
+      .form-field input:focus,
+      .form-field select:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      }
+
+      .form-field input:read-only {
+        background: #f9fafb;
+        color: #6b7280;
+        cursor: not-allowed;
+      }
+
+      .price-display {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      .price-display .amount {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+
+      .price-display .label {
+        font-size: 14px;
+        opacity: 0.9;
+      }
+
+      .user-details {
+        background: #f8fafc;
+        padding: 20px;
+        border-radius: 15px;
+        margin: 20px 0;
+        border-left: 4px solid #2563eb;
+      }
+
+      .user-details h4 {
+        color: #1e293b;
+        font-size: 16px;
+        margin-bottom: 15px;
+        font-weight: 600;
+      }
+
+      .user-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+      }
+
+      .user-info-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .user-info-item label {
+        font-size: 12px;
+        color: #6b7280;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .user-info-item span {
+        font-size: 14px;
+        color: #374151;
+        font-weight: 500;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 2px solid #f1f5f9;
+      }
+
+      .btn-secondary {
+        flex: 1;
+        padding: 12px 20px;
+        border: 2px solid #e5e7eb;
+        background: #ffffff;
+        color: #374151;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn-secondary:hover {
+        border-color: #d1d5db;
+        background: #f9fafb;
+      }
+
+      .btn-primary {
+        flex: 2;
+        padding: 12px 20px;
+        border: none;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+        transform: translateY(-1px);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .success-message {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+        box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+        z-index: 2000;
+      }
+
+      .success-message.show {
+        transform: translateX(0);
+      }
+
+      /* Ends */
+      .wrap {
+        max-width: 1200px;
+        margin: 70px auto;
+        padding: 0 20px;
+      }
+
+      .back {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        color: var(--muted);
+        text-decoration: none;
+        margin-bottom: 20px;
+      }
+
+      .back:hover {
+        color: var(--primary);
+      }
+
+      .main {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 40px;
+      }
+
+      /* LEFT COLUMN */
+      .left {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .hero {
+        width: 100%;
+        height: 360px;
+        border-radius: var(--radius);
+        background-size: cover;
+        background-position: center;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .title h1 {
+        font-size: 28px;
+        font-weight: 800;
+      }
+
+      .title p {
+        color: var(--muted);
+        margin-top: 4px;
+      }
+
+      .divider {
+        height: 1px;
+        background: var(--line);
+        margin: 12px 0;
+      }
+
+      /* Feature cards row */
+      .feature-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 16px;
+      }
+
+      .fcard {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #f3f6fb;
+        border-radius: var(--radius);
+        padding: 20px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      .fcard:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .fcard i {
+        font-size: 22px;
+        color: var(--primary);
+        margin-bottom: 6px;
+      }
+
+      /* Description */
+      .desc h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      .desc p {
+        color: #374151;
+        line-height: 1.6;
+        font-size: 15px;
+      }
+
+      /* Extra Features list */
+      .extras h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .extra-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        font-size: 15px;
+      }
+
+      .extra-list div {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #374151;
+      }
+
+      .extra-list i {
+        color: var(--primary);
+      }
+
+      /* Booking card (sticky right) - Booking Card */
+      .booking {
+        background: var(--card);
+        border-radius: 12px;
+        width: 310px;
+        height: fit-content;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        position: sticky;
+        top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .price-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .price {
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--primary);
+      }
+
+      .per {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .field {
+        margin: 10px 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .field label {
+        font-size: 14px;
+        color: #374151;
+        margin-bottom: 4px;
+        font-weight: 600;
+      }
+
+      .field input[type="date"] {
+        width: 100%;
+        height: 40px;
+        padding: 8px 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+        transition:
+          border 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .field input[type="date"]:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+      }
+
+      .btnh {
+        width: 100%;
+        height: 42px;
+        background: var(--primary);
+        color: #fff;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition:
+          background 0.3s,
+          transform 0.2s;
+      }
+
+      .btnh:hover {
+        background: #1e40af;
+        transform: translateY(-1px);
+      }
+
+      .btnh:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .note {
+        width: 100%;
+        text-align: center;
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 12px;
+      }
+
+      .booking-summary {
+        padding: 16px 0;
+        border-top: 1px solid var(--line);
+        font-size: 14px;
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 8px 0;
+      }
+
+      .summary-row.total {
+        font-weight: 700;
+        font-size: 16px;
+        color: var(--primary);
+        border-top: 1px solid var(--line);
+        padding-top: 8px;
+        margin-top: 12px;
+      }
+
+      /* Responsive for Phones */
+      @media (max-width: 600px) {
+        .main {
+          grid-template-columns: 1fr;
+          justify-items: center;
+          gap: 20px;
+        }
+
+        .booking {
+          position: static;
+          margin-top: 20px;
+          width: 90%;
+          max-width: 310px;
+          margin-inline: auto;
+        }
+
+        .btnh,
+        input[type="date"],
+        .divider {
+          width: 100%;
+          max-width: 263px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .booking-modal {
+          width: 95%;
+          max-width: 400px;
+          padding: 20px;
+          max-height: 85vh;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        .modal-actions {
+          flex-direction: column;
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 900px) {
+        .main {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          height: 240px;
+        }
+      }
+
+      /* Fade & Slide Animations */
+      @keyframes fadeUp {
+        0% {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeInScale {
+        0% {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* Apply animations */
+      .hero {
+        animation: fadeInScale 1s ease forwards;
+      }
+
+      .title {
+        animation: fadeUp 1s ease forwards;
+        animation-delay: 0.2s;
+        opacity: 0;
+      }
+
+      .feature-cards .fcard {
+        opacity: 0;
+        animation: fadeUp 0.8s ease forwards;
+      }
+
+      .feature-cards .fcard:nth-child(1) {
+        animation-delay: 0.3s;
+      }
+
+      .feature-cards .fcard:nth-child(2) {
+        animation-delay: 0.45s;
+      }
+
+      .feature-cards .fcard:nth-child(3) {
+        animation-delay: 0.6s;
+      }
+
+      .feature-cards .fcard:nth-child(4) {
+        animation-delay: 0.75s;
+      }
+
+      .desc {
+        opacity: 0;
+        animation: fadeUp 1s ease forwards;
+        animation-delay: 1s;
+      }
+
+      .extras {
+        opacity: 0;
+        animation: fadeUp 1s ease forwards;
+        animation-delay: 1.2s;
+      }
+
+      .booking {
+        opacity: 0;
+        animation: fadeInScale 1s ease forwards;
+        animation-delay: 1.5s;
+      }
+      /* Pay Now Button Styles */
+      #bookingModal .confirm-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #2563eb; /* Primary brand color */
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition:
+          background-color 0.3s ease,
+          transform 0.2s ease;
+      }
+
+      #bookingModal .confirm-btn i {
+        margin-right: 8px;
+        font-size: 18px;
+      }
+
+      /* Hover state */
+      #bookingModal .confirm-btn:hover {
+        background-color: #1e4bb8; /* Darker shade */
+        transform: translateY(-1px);
+      }
+
+      /* Active (pressed) state */
+      #bookingModal .confirm-btn:active {
+        background-color: #1a3f96;
+        transform: translateY(0);
+      }
+
+      /* Disabled state */
+      #bookingModal .confirm-btn:disabled {
+        background-color: #94a3b8; /* Muted gray-blue */
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+
+      /* Loading spinner inside button */
+      #bookingModal .confirm-btn.loading {
+        pointer-events: none;
+      }
+
+      #bookingModal .confirm-btn.loading i.ri-loader-4-line {
+        animation: spin 1s linear infinite;
+      }
+
+      /* Spinner animation */
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Footer section starts */
+      footer {
+        position: relative;
+        bottom: 0;
+        width: 100%;
+        padding: 40px 0;
+        background-color: #2563eb;
+      }
+
+      .footer .social {
+        text-align: center;
+        padding-bottom: 25px;
+        color: white;
+      }
+
+      .footer .social a {
+        font-size: 24px;
+        color: white;
+        width: 40px;
+        height: 40px;
+        line-height: 38px;
+        display: inline-block;
+        text-align: center;
+        border-radius: 50%;
+        margin: 0 8px;
+        box-shadow:
+          inset 0 0 10px black,
+          0 0 10px black;
+        transition: 0.3s ease;
+        border: 2px solid #ffffff;
+      }
+
+      .footer .social a:hover {
+        box-shadow:
+          inset 0 0 10px #ffffff,
+          0 0 10px #ffffff;
+        transform: scale(1.2) translateY(-10px);
+        color: #ffffff;
+        border: 2px solid #ffffff;
+      }
+
+      .footer ul {
+        margin-top: 0;
+        padding: 0;
+        font-size: 18px;
+        line-height: 1.6;
+        margin-bottom: 0;
+        text-align: center;
+      }
+
+      .footer ul li a {
+        color: white;
+        border-bottom: 3px solid transparent;
+        transition: 0.3s ease;
+      }
+
+      .footer ul li a:hover {
+        border-bottom: 3px solid #ffffff;
+      }
+
+      .footer ul li {
+        display: inline-block;
+        padding: 0 15px;
+      }
+
+      .footer .copyright {
+        margin-top: 15px;
+        text-align: center;
+        font-size: 12px;
+        color: white;
+      }
+
+      /* For mobile responsive */
+      @media (max-width: 768px) {
+        footer {
+          padding: 20px 0;
+        }
+
+        .footer .social {
+          padding-bottom: 15px;
+        }
+
+        .footer .social a {
+          font-size: 20px;
+          width: 35px;
+          height: 35px;
+          line-height: 33px;
+          margin: 0 5px;
+        }
+
+        .footer ul {
+          font-size: 16px;
+        }
+
+        .footer ul li {
+          display: block;
+          margin: 10px 0;
+        }
+
+        .footer ul li a {
+          padding: 10px;
+        }
+
+        .footer .copyright {
+          font-size: 10px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .footer .social a {
+          font-size: 18px;
+          width: 30px;
+          height: 30px;
+          line-height: 28px;
+          margin: 0 4px;
+        }
+
+        .footer ul li {
+          margin: 8px 0;
+        }
+
+        .footer ul {
+          font-size: 14px;
+        }
+
+        .footer .copyright {
+          font-size: 9px;
+        }
+      }
+
+      @media (width >= 540px) {
+        .steps__grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .footer__container {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (width > 768px) {
+        header::before {
+          height: calc(100% - 4rem);
+        }
+
+        nav {
+          position: static;
+          padding-block: 2rem;
+          padding-inline: 1rem;
+          max-width: var(--max-width);
+          margin-inline: auto;
+          display: flex;
+          align-items: center;
+          width: 90%;
+          justify-content: space-between;
+          gap: 2rem;
+        }
+
+        .nav__header {
+          flex: 1;
+          padding: 0;
+          background-color: transparent;
+        }
+
+        .nav__logo a {
+          font-weight: 800;
+          color: var(--text-dark);
+        }
+
+        .nav__menu__btn {
+          display: none;
+        }
+
+        .nav__links {
+          position: static;
+          padding: 0;
+          width: fit-content;
+          flex-direction: row;
+          background-color: transparent;
+          transform: none;
+        }
+
+        .nav__links a {
+          padding-block: 5px;
+          color: var(--text-dark);
+          border-bottom: 2px solid transparent;
+        }
+
+        .nav__links a:hover {
+          border-color: var(--primary-color);
+        }
+
+        .nav__links__btn {
+          display: none;
+        }
+
+        .nav__btns {
+          display: flex;
+          flex: 1;
+          align-items: center;
+          justify-content: flex-end;
+        }
+
+        .nav__btns .btn__primary {
+          color: var(--text-dark);
+          background-color: transparent;
+        }
+      }
+
+      /* ========== Custom Notification Styles ========== */
+      .custom-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        padding: 16px 20px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 300px;
+        max-width: 400px;
+        z-index: 10000;
+        transform: translateX(450px);
+        opacity: 0;
+        transition: all 0.3s ease;
+      }
+
+      .custom-notification.show {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      .custom-notification i {
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+
+      .custom-notification.success {
+        border-left: 4px solid #2563eb;
+      }
+
+      .custom-notification.success i {
+        color: #2563eb;
+      }
+
+      .custom-notification.error {
+        border-left: 4px solid #ef4444;
+      }
+
+      .custom-notification.error i {
+        color: #ef4444;
+      }
+
+      .custom-notification span {
+        flex: 1;
+        font-size: 15px;
+        color: #1e293b;
+        font-weight: 500;
+        line-height: 1.4;
+      }
+
+      .custom-notification .notification-close {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        transition: color 0.2s;
+        flex-shrink: 0;
+      }
+
+      .custom-notification .notification-close:hover {
+        color: #1e293b;
+      }
+
+      .custom-notification .notification-close i {
+        font-size: 20px;
+      }
+
+      /* Mobile responsive for notifications */
+      @media (max-width: 768px) {
+        .custom-notification {
+          top: 10px;
+          right: 10px;
+          left: 10px;
+          min-width: auto;
+          max-width: none;
+          transform: translateY(-150px);
+          padding: 14px 16px;
+        }
+
+        .custom-notification.show {
+          transform: translateY(0);
+        }
+
+        .custom-notification span {
+          font-size: 14px;
+        }
+
+        .custom-notification i {
+          font-size: 20px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .custom-notification {
+          padding: 12px 14px;
+          gap: 10px;
+        }
+
+        .custom-notification span {
+          font-size: 13px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <div class="nav__header">
+          <div class="nav__logo">
+            <a href="#">PrimeRides</a>
+          </div>
+          <div class="nav__menu__btn" id="menu-btn">
+            <i class="ri-menu-line"></i>
+          </div>
+        </div>
+
+        <ul class="nav__links" id="nav-links">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#rent">Rent</a></li>
+          <li><a href="index.html#services">Services</a></li>
+          <li><a href="index.html#ride">Ride</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <!-- Dynamic Auth Buttons for Mobile will be injected here -->
+        </ul>
+
+        <div class="nav__btns">
+          <!-- Dynamic Auth Buttons for Desktop will be injected here -->
+        </div>
+      </nav>
+    </header>
+    <div class="overlay" id="overlay">
+      <div class="modal" id="modal"></div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="overlay" id="bookingOverlay">
+      <div class="booking-modal" id="bookingModal">
+        <div class="modal-header">
+          <h2>Complete Your Booking</h2>
+          <button class="close-modal" id="closeBookingModal">&times;</button>
+        </div>
+
+        <!-- Car Information -->
+        <div class="car-info">
+          <h3 id="modalCarName">Car Name</h3>
+          <div class="car-details-grid">
+            <div class="car-detail-item">
+              <i class="ri-user-3-line"></i>
+              <span id="modalSeats">5 Seats</span>
+            </div>
+            <div class="car-detail-item">
+              <i class="ri-gas-station-line"></i>
+              <span id="modalFuel">Petrol</span>
+            </div>
+            <div class="car-detail-item">
+              <i class="ri-settings-3-line"></i>
+              <span id="modalTransmission">Manual</span>
+            </div>
+            <div class="car-detail-item">
+              <i class="ri-map-pin-line"></i>
+              <span id="modalLocation">Location</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking Form -->
+        <form class="booking-form" id="bookingForm">
+          <div class="form-row">
+            <div class="form-field">
+              <label for="modalPickupDate">Pickup Date</label>
+              <input type="date" id="modalPickupDate" required readonly />
+            </div>
+            <div class="form-field">
+              <label for="modalReturnDate">Return Date</label>
+              <input type="date" id="modalReturnDate" required readonly />
+            </div>
+            <div
+              class="driver-option-container"
+              style="
+                margin: 1.5rem 0;
+                padding: 1rem;
+                background: #f8fafc;
+                border-radius: 12px;
+                border: 1.5px dashed #2563eb;
+              "
+            >
+              <label
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 12px;
+                  cursor: pointer;
+                "
+              >
+                <input
+                  type="checkbox"
+                  id="needDriverCheckbox"
+                  style="width: 20px; height: 20px; cursor: pointer"
+                />
+                <div>
+                  <strong style="color: #1e293b; display: block"
+                    >Need a Professional Driver?</strong
+                  >
+                  <small style="color: #64748b"
+                    >Additional charges: ₹500 / day</small
+                  >
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="modalPickupLocation">Pickup Location</label>
+              <input type="text" id="modalPickupLocation" required readonly />
+            </div>
+            <div class="form-field">
+              <label for="modalReturnLocation">Return Location</label>
+              <input type="text" id="modalReturnLocation" required readonly />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="modalPickupTime">Pickup Time</label>
+              <input type="time" id="modalPickupTime" required value="10:00" />
+            </div>
+            <div class="form-field">
+              <label for="modalReturnTime">Return Time</label>
+              <input type="time" id="modalReturnTime" required value="10:00" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="modalTotalDays">Total Days</label>
+              <input type="number" id="modalTotalDays" readonly />
+            </div>
+            <div class="form-field">
+              <label for="modalFuelType">Fuel Type</label>
+              <input type="text" id="modalFuelType" required readonly />
+            </div>
+          </div>
+
+          <!-- Price Display -->
+          <div
+            class="booking-summary detailed-summary"
+            id="modalPriceBreakdown"
+          >
+            <div class="summary-row">
+              <span>Daily Rate</span>
+              <strong id="breakdownDailyRate">₹0</strong>
+            </div>
+            <div class="summary-row">
+              <span>Number of Days</span>
+              <strong id="breakdownDays">0</strong>
+            </div>
+            <div
+              class="summary-row"
+              id="driverChargeRow"
+              style="display: none; color: #10b981; font-weight: 600"
+            >
+              <span>Driver Charges (₹500/day)</span>
+              <strong id="breakdownDriverCharges">₹0</strong>
+            </div>
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <strong id="breakdownSubtotal">₹0</strong>
+            </div>
+            <div class="summary-row">
+              <span>Taxes (18%)</span>
+              <strong id="breakdownTaxes">₹0</strong>
+            </div>
+            <div class="summary-row total-row">
+              <span>Total Amount</span>
+              <strong id="breakdownTotal">₹0</strong>
+            </div>
+          </div>
+
+          <!-- User Details -->
+          <div class="user-details" id="userDetailsSection">
+            <h4>Your Details</h4>
+            <div class="user-info-grid">
+              <div class="user-info-item">
+                <label>Full Name</label>
+                <span id="userFullName">Loading...</span>
+              </div>
+              <div class="user-info-item">
+                <label>Email</label>
+                <span id="userEmail">Loading...</span>
+              </div>
+              <div class="user-info-item">
+                <label>Phone</label>
+                <span id="userPhone">Loading...</span>
+              </div>
+              <div class="user-info-item">
+                <label>Address</label>
+                <span id="userAddress">Loading...</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" id="cancelBooking">
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="modal-btn confirm-btn"
+              id="confirmBooking"
+            >
+              <i class="ri-bank-card-line"></i> Pay Now
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+      <i class="ri-check-circle-line"></i> Booking confirmed successfully!
+    </div>
+
+    <div class="wrap">
+      <a href="Explore_cars.html" class="back">
+        <i class="ri-arrow-left-line"></i>
+        Back to all cars
+      </a>
+
+      <div class="main">
+        <div class="left">
+          <div class="hero" id="hero"></div>
+
+          <div class="title">
+            <h1 id="carName"></h1>
+            <p id="carType"></p>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="feature-cards">
+            <div class="fcard">
+              <i class="ri-user-3-line"></i>
+              <span id="seats"></span>
+            </div>
+            <div class="fcard">
+              <i class="ri-gas-station-line"></i>
+              <span id="fuel"></span>
+            </div>
+            <div class="fcard">
+              <i class="ri-settings-3-line"></i>
+              <span id="transmission"></span>
+            </div>
+            <div class="fcard">
+              <i class="ri-map-pin-line"></i>
+              <span id="location"></span>
+            </div>
+          </div>
+
+          <div class="desc">
+            <h3>Description</h3>
+            <p id="description">
+              This is a modern car offering comfort, performance and safety
+              features for your journeys.
+            </p>
+          </div>
+
+          <div class="extras">
+            <h3>Features</h3>
+            <div class="extra-list">
+              <div><i class="ri-check-line"></i> 360° Camera</div>
+              <div><i class="ri-check-line"></i> Bluetooth</div>
+              <div><i class="ri-check-line"></i> GPS</div>
+              <div><i class="ri-check-line"></i> Heated Seats</div>
+              <div><i class="ri-check-line"></i> Rear View Mirror</div>
+              <div><i class="ri-check-line"></i> Premium Sound System</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="booking">
+          <div class="price-row">
+            <div class="price" id="carPrice">₹0</div>
+            <div class="per">per day</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="field">
+            <label>Pickup Date</label>
+            <input type="date" id="pickupDate" required />
+          </div>
+
+          <div class="field">
+            <label>Return Date</label>
+            <input type="date" id="returnDate" required />
+          </div>
+
+          <div
+            class="booking-summary"
+            id="bookingSummary"
+            style="display: none"
+          >
+            <div class="summary-row">
+              <span>Daily Rate</span>
+              <span id="summaryDailyRate">₹0</span>
+            </div>
+            <div class="summary-row">
+              <span>Number of Days</span>
+              <span id="summaryDays">0</span>
+            </div>
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span id="summarySubtotal">₹0</span>
+            </div>
+            <div class="summary-row">
+              <span>Taxes (18%)</span>
+              <span id="summaryTaxes">₹0</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total Amount</span>
+              <span id="summaryTotal">₹0</span>
+            </div>
+          </div>
+
+          <button class="btnh" id="bookNowBtn">Book Now</button>
+          <div class="note">No credit card required to reserve</div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="social">
+        <a href="https://www.facebook.com"
+          ><i class="bx bxl-facebook-circle"></i
+        ></a>
+        <a href="https://in.linkedin.com"
+          ><i class="bx bxl-linkedin-square"></i
+        ></a>
+        <a href="https://web.telegram.org"><i class="bx bxl-telegram"></i></a>
+        <a href="https://www.instagram.com"><i class="bx bxl-instagram"></i></a>
+      </div>
+      <ul class="list">
+        <li><a href="index.html#home">Home</a></li>
+        <li><a href="index.html#rent">Rent</a></li>
+        <li><a href="index.html#service">Services</a></li>
+        <li><a href="index.html#ride">Ride</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="privacy.html">Terms & Condition</a></li>
+      </ul>
+      <p class="copyright">PrimeRides @ ALL Rights Reserved</p>
+    </footer>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabaseClient.js"></script>
+    <script src="auth.js"></script>
+
+    <script>
+      const overlay = document.getElementById("overlay");
+      const modal = document.getElementById("modal");
+
+      // Booking Modal Elements
+      const bookingOverlay = document.getElementById("bookingOverlay");
+      const bookingModal = document.getElementById("bookingModal");
+      const closeBookingModal = document.getElementById("closeBookingModal");
+      const bookingForm = document.getElementById("bookingForm");
+      const cancelBooking = document.getElementById("cancelBooking");
+      const confirmBooking = document.getElementById("confirmBooking");
+      const successMessage = document.getElementById("successMessage");
+
+      // Mobile menu
+      const menuBtn = document.getElementById("menu-btn");
+      const navLinks = document.getElementById("nav-links");
+      const menuBtnIcon = menuBtn.querySelector("i");
+
+      menuBtn.addEventListener("click", (e) => {
+        navLinks.classList.toggle("open");
+        const isOpen = navLinks.classList.contains("open");
+        menuBtnIcon.setAttribute(
+          "class",
+          isOpen ? "ri-close-line" : "ri-menu-line",
+        );
+      });
+
+      navLinks.addEventListener("click", (e) => {
+        navLinks.classList.remove("open");
+        menuBtnIcon.setAttribute("class", "ri-menu-line");
+      });
+
+      // Car details functionality
+      let currentCar = null;
+      let dailyRate = 0;
+      let currentUser = null;
+
+      // Parse car ID from URL and load from Supabase
+      const params = new URLSearchParams(window.location.search);
+      const carId = params.get("id");
+
+      if (carId) {
+        loadCarFromSupabase(carId);
+      } else {
+        console.error("No car ID provided");
+        showNotification("Car not found. Redirecting to explore page...");
+        window.location.href = "Explore_cars.html";
+      }
+
+      // Load car details from Supabase
+      async function loadCarFromSupabase(id) {
+        try {
+          const { data, error } = await supabase
+            .from("cars")
+            .select("*")
+            .eq("id", id)
+            .single();
+
+          if (error) {
+            console.error("Error loading car:", error);
+            showNotification("Failed to load car details. Redirecting...");
+            window.location.href = "Explore_cars.html";
+            return;
+          }
+
+          if (data) {
+            currentCar = data;
+            displayCarDetails(data);
+          }
+        } catch (error) {
+          console.error("Error fetching car data:", error);
+          showNotification("Failed to load car details. Redirecting...");
+          window.location.href = "Explore_cars.html";
+        }
+      }
+
+      function displayCarDetails(car) {
+        document.getElementById("hero").style.backgroundImage =
+          `url(${car.image_url})`;
+        document.getElementById("hero").style.backgroundSize = "cover";
+        document.getElementById("hero").style.backgroundPosition = "center";
+
+        document.getElementById("carName").textContent = car.name;
+        document.getElementById("carType").textContent = car.type;
+        document.getElementById("seats").textContent = car.seats + " Seats";
+        document.getElementById("fuel").textContent = car.fuel;
+        document.getElementById("transmission").textContent = car.transmission;
+        document.getElementById("location").textContent = car.location;
+
+        dailyRate =
+          car.rate_per_day ||
+          parseFloat(car.price?.replace(/[^0-9]/g, "") || 0);
+        document.getElementById("carPrice").textContent =
+          "₹" + dailyRate.toLocaleString();
+
+        if (car.description) {
+          document.getElementById("description").textContent = car.description;
+        }
+      }
+
+      // Date handling
+      const pickupDateInput = document.getElementById("pickupDate");
+      const returnDateInput = document.getElementById("returnDate");
+      const bookNowBtn = document.getElementById("bookNowBtn");
+      const bookingSummary = document.getElementById("bookingSummary");
+
+      const today = new Date().toISOString().split("T")[0];
+      pickupDateInput.setAttribute("min", today);
+
+      pickupDateInput.addEventListener("change", function () {
+        const selectedDate = new Date(this.value);
+        selectedDate.setDate(selectedDate.getDate() + 1);
+        returnDateInput.setAttribute(
+          "min",
+          selectedDate.toISOString().split("T")[0],
+        );
+        calculateBooking();
+      });
+
+      returnDateInput.addEventListener("change", calculateBooking);
+
+      function calculateBooking() {
+        const pickupDate = pickupDateInput.value;
+        const returnDate = returnDateInput.value;
+
+        if (pickupDate && returnDate && currentCar) {
+          const pickup = new Date(pickupDate);
+          const returnD = new Date(returnDate);
+          const timeDiff = returnD.getTime() - pickup.getTime();
+          const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+          if (daysDiff > 0) {
+            const subtotal = daysDiff * dailyRate;
+            const taxes = Math.round(subtotal * 0.18);
+            const total = subtotal + taxes;
+
+            bookingSummary.innerHTML = `
+                                                       <div class="summary-row">
+                                                         <span>Days:</span>
+                                                         <strong>${daysDiff}</strong>
+                                                       </div>
+                                                       <div class="summary-row">
+                                                         <span>Daily Rate:</span>
+                                                         <span>₹${dailyRate.toLocaleString()}</span>
+                                                       </div>
+                                                       <div class="summary-row">
+                                                         <span>Subtotal:</span>
+                                                         <span>₹${subtotal.toLocaleString()}</span>
+                                                       </div>
+                                                       <div class="summary-row">
+                                                         <span>Taxes (18%):</span>
+                                                         <span>₹${taxes.toLocaleString()}</span>
+                                                       </div>
+                                                       <div class="summary-row total-row">
+                                                         <span>Total:</span>
+                                                         <strong>₹${total.toLocaleString()}</strong>
+                                                       </div>
+                                                     `;
+          }
+        }
+      }
+
+      // Book Now Button Handler
+      bookNowBtn.addEventListener("click", handleBookNow);
+
+      async function handleBookNow(e) {
+        e.preventDefault();
+
+        const loggedIn = localStorage.getItem("loggedIn");
+        const role = localStorage.getItem("role");
+
+        if (!loggedIn || loggedIn !== "true" || !role || role !== "user") {
+          showNotification("Please login as a user to make a booking");
+          openModal("signin");
+          return;
+        }
+
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) {
+          showNotification("Please login to make a booking");
+          openModal("signin");
+          return;
+        }
+
+        const pickupDate = pickupDateInput.value;
+        const returnDate = returnDateInput.value;
+
+        if (!pickupDate || !returnDate) {
+          showNotification("Please select both pickup and return dates");
+          return;
+        }
+
+        if (!currentCar) {
+          showNotification("Car information not found");
+          return;
+        }
+
+        await loadUserData(user.id);
+        showBookingModal();
+      }
+
+      // Load user data from Supabase
+      // Load user data from Supabase
+      async function loadUserData(userId) {
+        try {
+          // Try fetching user by user_id first, then by id
+          let { data, error } = await supabase
+            .from("users")
+            .select("*")
+            .eq("user_id", userId)
+            .maybeSingle();
+
+          if ((!data || error) && !data) {
+            ({ data, error } = await supabase
+              .from("users")
+              .select("*")
+              .eq("id", userId)
+              .maybeSingle());
+          }
+
+          if (error) {
+            console.error("Supabase error while loading user:", error.message);
+            showNotification("Could not load user data.");
+            return;
+          }
+
+          if (!data) {
+            console.warn("No matching user found for ID:", userId);
+            showNotification("User profile not found.");
+            return;
+          }
+
+          currentUser = data;
+
+          // Get auth email
+          const {
+            data: { user: authUser },
+          } = await supabase.auth.getUser();
+          const userEmail = authUser?.email || "Not provided";
+
+          // Construct formatted address
+          const street = data.address || "";
+          const city = data.city || "";
+          const state = data.state || "";
+          const zip = data.zipcode || "";
+
+          const fullAddress =
+            [street, city, state, zip]
+              .filter((part) => part && part.trim() !== "")
+              .join(", ") || "Not provided";
+
+          // Populate user details in modal
+          document.getElementById("userFullName").textContent =
+            `${data.firstname || ""} ${data.lastname || ""}`.trim() ||
+            "Not provided";
+          document.getElementById("userEmail").textContent = userEmail;
+          document.getElementById("userPhone").textContent =
+            data.phone || "Not provided";
+
+          document.getElementById("userAddress").innerHTML = `
+                                                 ${fullAddress}
+                                               `;
+        } catch (error) {
+          console.error("Unexpected error loading user data:", error);
+          showNotification("Failed to load your profile.");
+        }
+      }
+
+      // Show booking modal
+      function showBookingModal() {
+        // Populate car details
+        document.getElementById("modalCarName").textContent = currentCar.name;
+        document.getElementById("modalSeats").textContent =
+          currentCar.seats + " Seats";
+        document.getElementById("modalFuel").textContent = currentCar.fuel;
+        document.getElementById("modalTransmission").textContent =
+          currentCar.transmission;
+        document.getElementById("modalLocation").textContent =
+          currentCar.location;
+
+        // Populate booking details
+        document.getElementById("modalPickupDate").value =
+          pickupDateInput.value;
+        document.getElementById("modalReturnDate").value =
+          returnDateInput.value;
+        document.getElementById("modalPickupLocation").value =
+          currentCar.location;
+        document.getElementById("modalReturnLocation").value =
+          currentCar.location;
+        document.getElementById("modalFuelType").value = currentCar.fuel;
+
+        // Calculate and display
+        updateTotalPrice();
+        // Show modal
+        bookingOverlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+      }
+
+      // Calculate booking in modal
+      function calculateModalBooking() {
+        const pickupDate = document.getElementById("modalPickupDate").value;
+        const returnDate = document.getElementById("modalReturnDate").value;
+
+        if (pickupDate && returnDate) {
+          const pickup = new Date(pickupDate);
+          const returnD = new Date(returnDate);
+          const timeDiff = returnD.getTime() - pickup.getTime();
+          const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+          // Calculate values
+          const dailyRateValue = dailyRate; // from global scope
+          const subtotal = daysDiff > 0 ? daysDiff * dailyRateValue : 0;
+          const taxes = Math.round(subtotal * 0.18);
+          const total = subtotal + taxes;
+
+          // Update breakdown elements
+          document.getElementById("breakdownDailyRate").textContent =
+            `₹${dailyRateValue.toLocaleString()}`;
+          document.getElementById("breakdownDays").textContent =
+            daysDiff > 0 ? daysDiff : 0;
+          document.getElementById("breakdownSubtotal").textContent =
+            `₹${subtotal.toLocaleString()}`;
+          document.getElementById("breakdownTaxes").textContent =
+            `₹${taxes.toLocaleString()}`;
+          document.getElementById("breakdownTotal").textContent =
+            `₹${total.toLocaleString()}`;
+
+          // Also update hidden total amount field if present
+          const modalTotalAmount = document.getElementById("modalTotalAmount");
+          if (modalTotalAmount) {
+            modalTotalAmount.textContent = `₹${total.toLocaleString()}`;
+          }
+
+          // Update modalTotalDays input
+          const modalTotalDaysInput = document.getElementById("modalTotalDays");
+          if (modalTotalDaysInput) {
+            modalTotalDaysInput.value = daysDiff > 0 ? daysDiff : 0;
+          }
+        }
+      }
+      // Modal event listeners
+      closeBookingModal.addEventListener("click", closeBookingModalHandler);
+      cancelBooking.addEventListener("click", closeBookingModalHandler);
+
+      function closeBookingModalHandler() {
+        bookingOverlay.classList.remove("active");
+        document.body.style.overflow = "auto";
+      }
+
+      // ============ RAZORPAY INTEGRATION - UPDATED BOOKING SUBMISSION ============
+      bookingForm.addEventListener("submit", handleBookingSubmission);
+
+      function updateTotalPrice() {
+        if (!currentCar) return;
+
+        const pickupInput = document.getElementById("modalPickupDate").value;
+        const returnInput = document.getElementById("modalReturnDate").value;
+        if (!pickupInput || !returnInput) return;
+
+        const pickup = new Date(pickupInput);
+        const returnD = new Date(returnInput);
+        const timeDiff = returnD.getTime() - pickup.getTime();
+        const days = Math.ceil(timeDiff / (1000 * 3600 * 24)) || 1;
+
+        const needDriver =
+          document.getElementById("needDriverCheckbox").checked;
+
+        // 1. Calculation
+        let baseSubtotal = dailyRate * days;
+        let driverCharges = needDriver ? 500 * days : 0;
+
+        let subtotal = baseSubtotal + driverCharges;
+        let taxes = Math.round(subtotal * 0.18);
+        let finalTotal = subtotal + taxes;
+
+        // 2. UI Toggle for Driver Row
+        const driverRow = document.getElementById("driverChargeRow");
+        if (needDriver) {
+          driverRow.style.display = "flex";
+          document.getElementById("breakdownDriverCharges").innerText =
+            `+ ₹${driverCharges.toLocaleString()}`;
+        } else {
+          driverRow.style.display = "none";
+        }
+
+        // 3. Main UI Updates
+        document.getElementById("breakdownDays").innerText = days;
+        document.getElementById("modalTotalDays").value = days;
+        document.getElementById("breakdownDailyRate").innerText =
+          `₹${dailyRate.toLocaleString()}`;
+        document.getElementById("breakdownSubtotal").innerText =
+          `₹${subtotal.toLocaleString()}`;
+        document.getElementById("breakdownTaxes").innerText =
+          `₹${taxes.toLocaleString()}`;
+        document.getElementById("breakdownTotal").innerText =
+          `₹${finalTotal.toLocaleString()}`;
+
+        window.currentTotalAmount = finalTotal;
+      }
+      async function handleBookingSubmission(e) {
+        e.preventDefault();
+
+        // 1. Fresh status check: Checkbox ki current state yahan capture karein
+        const driverCheckbox = document.getElementById("needDriverCheckbox");
+        const isDriverNeeded = driverCheckbox ? driverCheckbox.checked : false;
+
+        if (!window.currentTotalAmount) {
+          showNotification("Please select dates first.");
+          return;
+        }
+
+        const totalDays =
+          parseInt(document.getElementById("modalTotalDays").value) || 1;
+
+        // --- RE-CALCULATE TO MATCH UI ---
+        let baseSubtotal = dailyRate * totalDays;
+        let driverCharges = isDriverNeeded ? 500 * totalDays : 0;
+        let finalSubtotal = baseSubtotal + driverCharges;
+        let finalTaxes = Math.round(finalSubtotal * 0.18);
+
+        const options = {
+          key: "rzp_test_RUrGkRs8YJngaQ",
+          amount: window.currentTotalAmount * 100,
+          currency: "INR",
+          name: "PrimeRides",
+          handler: async function (response) {
+            // --- DATABASE INSERTION ---
+            // --- DATABASE INSERTION ---
+            const { error } = await supabase.from("bookings").insert([
+              {
+                user_id: currentUser.id,
+                car_id: currentCar.id,
+                pickup_date: document.getElementById("modalPickupDate").value,
+                return_date: document.getElementById("modalReturnDate").value,
+                pickup_time:
+                  document.getElementById("modalPickupTime").value ||
+                  "10:00:00",
+                return_time:
+                  document.getElementById("modalReturnTime").value ||
+                  "10:00:00",
+                pickup_location: document.getElementById("modalPickupLocation")
+                  .value,
+                return_location: document.getElementById("modalReturnLocation")
+                  .value,
+                total_days: totalDays,
+                daily_rate: dailyRate,
+                subtotal: finalSubtotal,
+                taxes: finalTaxes,
+                total_amount: window.currentTotalAmount,
+
+                // ✅ Explicitly set driver details to null for fresh bookings
+                with_driver: isDriverNeeded,
+                driver_id: null, // No driver is assigned yet
+                driver_status: null, // Admin will change this to 'assigned' later
+
+                booking_status: "confirmed",
+                payment_status: "paid",
+                payment_method: "razorpay",
+              },
+            ]);
+
+            if (!error) {
+              showNotification("Booking Confirmed!");
+              window.location.href = "user.html";
+            } else {
+              console.error("Supabase Error:", error);
+              alert("Database Error: " + error.message);
+            }
+          },
+          prefill: {
+            name: `${currentUser.firstname} ${currentUser.lastname}`,
+            contact: currentUser.phone,
+          },
+          theme: { color: "#2563eb" },
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+      }
+      window.addEventListener("load", () => {
+        document.body.style.opacity = "1";
+      });
+      // Checkbox aur Modal Dates par listeners
+      document
+        .getElementById("needDriverCheckbox")
+        .addEventListener("change", updateTotalPrice);
+      document
+        .getElementById("modalPickupDate")
+        .addEventListener("change", updateTotalPrice);
+      document
+        .getElementById("modalReturnDate")
+        .addEventListener("change", updateTotalPrice);
+    </script>
+  </body>
+</html>

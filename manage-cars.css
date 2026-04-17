@@ -1,0 +1,526 @@
+/* Enhanced Manage Cars Page Styles with Dynamic Content Support */
+
+/* Table Container */
+.table-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-100);
+    overflow: hidden;
+}
+
+/* Car Table */
+.car-table {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.car-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    align-items: center;
+    padding: 1.5rem;
+    background: white;
+    border-bottom: 1px solid var(--gray-100);
+    transition: all 0.3s ease;
+    min-height: 80px;
+}
+
+.car-row:first-child {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.car-row:last-child {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border-bottom: none;
+}
+
+.car-row.header {
+    background: linear-gradient(135deg, var(--primary-blue), var(--blue-500));
+    color: white;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.car-row:not(.header):hover {
+    background: var(--blue-50);
+    transform: translateX(4px);
+    box-shadow: var(--shadow-md);
+}
+
+.column-header {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Car Info Column */
+.car-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.car-image {
+    width: 60px;
+    height: 45px;
+    background: var(--gray-100);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-500);
+    font-size: 1.5rem;
+    border: 2px solid var(--gray-200);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.car-row:hover .car-image {
+    background: var(--blue-100);
+    color: var(--primary-blue);
+    border-color: var(--primary-blue);
+}
+
+.car-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.car-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.car-details strong {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 0.25rem;
+}
+
+.car-details small {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    font-weight: 400;
+}
+
+/* Price Column */
+.car-price {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+/* Status Column */
+.car-status .status-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.status-badge.available {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    color: #065f46;
+    border-color: #10b981;
+}
+
+.status-badge.not-available {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: #991b1b;
+    border-color: #ef4444;
+}
+
+/* Bookings Column */
+.car-bookings {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--gray-600);
+}
+
+/* Actions Column */
+.car-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.action-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: var(--gray-100);
+    color: var(--gray-600);
+    position: relative;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.action-btn::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gray-800);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 100;
+}
+
+.action-btn:hover::after {
+    opacity: 1;
+}
+
+.toggle-status {
+    background: var(--blue-100);
+    color: var(--primary-blue);
+}
+
+.toggle-status:hover {
+    background: var(--primary-blue);
+    color: white;
+}
+
+.edit-btn {
+    background: var(--gray-100);
+    color: var(--gray-600);
+}
+
+.edit-btn:hover {
+    background: var(--warning);
+    color: white;
+}
+
+.delete-btn {
+    background: #fee2e2;
+    color: var(--error);
+}
+
+.delete-btn:hover {
+    background: var(--error);
+    color: white;
+}
+
+/* Loading and Empty States */
+.loading-state,
+.error-state,
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    color: var(--gray-600);
+    background: white;
+    border-radius: 12px;
+}
+
+.loading-state i {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary-blue);
+    animation: spin 1s linear infinite;
+}
+
+.error-state i,
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    color: var(--gray-300);
+}
+
+.error-state h3,
+.empty-state h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 0.75rem;
+}
+
+.error-state p,
+.empty-state p {
+    font-size: 1rem;
+    color: var(--gray-500);
+    margin-bottom: 2rem;
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+.error-state .btn,
+.empty-state .btn {
+    margin-top: 1rem;
+}
+
+/* Search Box Enhancement */
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-box i {
+    position: absolute;
+    left: 1rem;
+    color: var(--gray-400);
+    z-index: 2;
+}
+
+.search-box input {
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 8px;
+    background: white;
+    font-size: 0.875rem;
+    width: 300px;
+    transition: all 0.3s ease;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px var(--blue-100);
+}
+
+.search-box input::placeholder {
+    color: var(--gray-400);
+}
+
+/* Responsive Design for Manage Cars */
+@media (max-width: 1024px) {
+    .car-row {
+        grid-template-columns: 2fr 1fr 1fr 0.8fr;
+        font-size: 0.875rem;
+    }
+
+    .car-bookings {
+        display: none;
+    }
+
+    .car-row .car-bookings {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .car-row {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .car-row.header {
+        display: none;
+    }
+
+    .car-row:not(.header) {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        border: 1px solid var(--gray-200);
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        padding: 1.5rem;
+    }
+
+    .car-info {
+        margin-bottom: 1rem;
+    }
+
+    .car-details {
+        flex: 1;
+    }
+
+    .car-row-mobile-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .mobile-field {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .mobile-field-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--gray-600);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.25rem;
+    }
+
+    .car-actions {
+        justify-content: stretch;
+        gap: 0.75rem;
+    }
+
+    .action-btn {
+        flex: 1;
+        height: 45px;
+        border-radius: 8px;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .car-actions {
+        flex-direction: column;
+    }
+
+    .action-btn {
+        height: 40px;
+    }
+
+    .search-box input {
+        width: 100%;
+    }
+}
+
+/* Animation for row interactions */
+@keyframes rowSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.car-row:not(.header) {
+    animation: rowSlideIn 0.3s ease-out;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Priority car highlighting */
+.car-row.featured {
+    background: linear-gradient(90deg, #fff7ed, #ffffff);
+    border-left: 4px solid var(--warning);
+}
+
+.car-row.featured:hover {
+    background: linear-gradient(90deg, #fef3c7, var(--blue-50));
+}
+
+/* Status indicator enhancements */
+.status-badge {
+    position: relative;
+    overflow: hidden;
+}
+
+.status-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s;
+}
+
+.status-badge:hover::before {
+    left: 100%;
+}
+
+/* Enhanced hover effects */
+.car-row:not(.header):hover .car-price {
+    color: var(--primary-blue);
+    font-weight: 800;
+}
+
+.car-row:not(.header):hover .car-details strong {
+    color: var(--primary-blue);
+}
+
+/* Mobile enhancements for better UX */
+@media (max-width: 768px) {
+    .car-row:not(.header) {
+        position: relative;
+    }
+
+    .car-row:not(.header)::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        background: var(--primary-blue);
+        border-radius: 0 4px 4px 0;
+    }
+
+    .car-row-mobile-content .mobile-field:first-child {
+        border-right: 1px solid var(--gray-200);
+        padding-right: 1rem;
+    }
+}
+
+/* Accessibility improvements */
+.action-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--blue-100);
+}
+
+.car-row:focus-within {
+    background: var(--blue-50);
+    outline: 2px solid var(--primary-blue);
+    outline-offset: -2px;
+}
+
+/* Print styles */
+@media print {
+    .car-actions,
+    .mobile-menu-toggle,
+    .header-actions {
+        display: none;
+    }
+
+    .car-row {
+        break-inside: avoid;
+    }
+
+    .table-container {
+        box-shadow: none;
+        border: 1px solid var(--gray-300);
+    }
+}

@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+
+    <!-- Icons link  -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+    <title>PrimeRides</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="nav__header">
+          <div class="nav__logo">
+            <a href="#">PrimeRides</a>
+          </div>
+          <div class="nav__menu__btn" id="menu-btn">
+            <i class="ri-menu-line"></i>
+          </div>
+        </div>
+
+        <ul class="nav__links" id="nav-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#rent">Rent</a></li>
+          <li><a href="#service">Services</a></li>
+          <li><a href="#ride">Ride</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <!-- Dynamic Auth Buttons for Mobile will be injected here -->
+        </ul>
+
+        <div class="nav__btns">
+          <!-- Dynamic Auth Buttons for Desktop will be injected here -->
+        </div>
+      </nav>
+
+      <div class="section__container header__container" id="home">
+        <div class="header__image">
+          <img src="icons/banner_car_image.png" alt="header" />
+        </div>
+        <div class="header__content">
+          <h1>Looking to save more on your rental car?</h1>
+          <p>
+            Discover PrimeRides car rental options in India with Rent a Car.
+            Select from a range of car options and local specials.
+          </p>
+          <div class="header__links">
+            <a href="Explore_cars.html">
+              <button class="btn1">Explore Cars</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Login & Signup -->
+    <!-- Overlay + Modal -->
+    <div class="overlay" id="overlay">
+      <div class="modal" id="modal">
+        <!-- Dynamic content will load here -->
+      </div>
+    </div>
+
+    <!-- Login & Signup ends..-->
+
+    <section class="section__container steps__container" id="rent">
+      <p class="section__subheader">HOW IT WORKS</p>
+      <h2 class="section__header">Rentgo following 3 working steps</h2>
+      <div class="steps__grid">
+        <div class="steps__card">
+          <span><i class="ri-map-pin-fill"></i> </span>
+          <h4>Choose a location</h4>
+          <p>
+            Select your desired rental location from our extensive network of
+            car rental spots.
+          </p>
+        </div>
+        <div class="steps__card">
+          <span><i class="ri-calendar-check-fill"></i></span>
+          <h4>Pick-up date</h4>
+          <p>
+            Specify the date and time you wish to pick up your car with flexible
+            scheduling options.
+          </p>
+        </div>
+        <div class="steps__card">
+          <span><i class="ri-bookmark-3-fill"></i></span>
+          <h4>Book your car</h4>
+          <p>
+            Browse through our wide range of vehicles and choose the one that
+            best suits your needs.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section__container service__container" id="service">
+      <div class="service__image">
+        <img src="icons/image1.png" alt="service" />
+      </div>
+      <div class="service__content">
+        <p class="section__subheader">BEST SERVICES</p>
+        <h2 class="section__header">
+          Feel the best experience with our rental deals
+        </h2>
+        <ul class="service__list">
+          <li>
+            <span><i class="ri-price-tag-3-fill"></i></span>
+            <div>
+              <h4>Deals for every budget</h4>
+              <p>
+                From economy cars to luxury vehicles, we have something for
+                everyone, ensuring you get the best value for your money.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span><i class="ri-wallet-fill"></i></span>
+            <div>
+              <h4>Best price guarantee</h4>
+              <p>
+                We ensure you get competitive rates in the market, so you can
+                book with confidence knowing you're getting the best deal.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span><i class="ri-customer-service-fill"></i></span>
+            <div>
+              <h4>Support 24/7</h4>
+              <p>
+                Our dedicated team is available 24/7 to assist you with any
+                questions or concerns, ensuring a smooth rental experience.
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section__container experience__container" id="ride">
+      <p class="section__subheader">CUSTOMER EXPERIENCE</p>
+      <h2 class="section__header">
+        We are ensuring the best customer experience
+      </h2>
+      <div class="experience__content">
+        <div class="experience__card">
+          <span><i class="ri-price-tag-3-fill"></i></span>
+          <h4>Competitive pricing</h4>
+        </div>
+        <div class="experience__card">
+          <span><i class="ri-money-rupee-circle-fill"></i></span>
+          <h4>Easier Rent On Your Budget</h4>
+        </div>
+        <div class="experience__card">
+          <span><i class="ri-bank-card-fill"></i></span>
+          <h4>Most Felxible Payment Plans</h4>
+        </div>
+        <div class="experience__card">
+          <span><i class="ri-award-fill"></i></span>
+          <h4>The Best Extended Auto Warranties</h4>
+        </div>
+        <div class="experience__card">
+          <span><i class="ri-customer-service-2-fill"></i></span>
+          <h4>Roadside Assistance 24/7</h4>
+        </div>
+        <div class="experience__card">
+          <span><i class="ri-car-fill"></i></span>
+          <h4>Your Choice Of Mechanic</h4>
+        </div>
+        <img src="icons/imag.jpg" alt="experience" />
+      </div>
+    </section>
+
+    <!-- Footer Section Starts  -->
+    <footer class="footer">
+      <div class="social">
+        <a href="https://www.facebook.com/"
+          ><i class="bx bxl-facebook-circle"></i
+        ></a>
+        <a href="https://in.linkedin.com/"
+          ><i class="bx bxl-linkedin-square"></i
+        ></a>
+        <a href="https://web.telegram.org"><i class="bx bxl-telegram"></i></a>
+        <a href="https://www.instagram.com"><i class="bx bxl-instagram"></i></a>
+      </div>
+
+      <ul class="list">
+        <li>
+          <a href="#home">Home</a>
+        </li>
+        <li>
+          <a href="#rent">Rent</a>
+        </li>
+        <li>
+          <a href="#service">Services</a>
+        </li>
+        <li>
+          <a href="#ride">Ride</a>
+        </li>
+        <li>
+          <a href="contact.html">Contact</a>
+        </li>
+        <li>
+          <a href="privacy.html">Term & Condition</a>
+        </li>
+      </ul>
+      <p class="copyright">@ PrimeRides | ALL Rights Reserverd</p>
+    </footer>
+
+    <!-- Footer Section ends  -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabaseClient.js"></script>
+    <script src="auth.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>

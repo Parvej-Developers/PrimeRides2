@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <title>Car Rental - Policy Center</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat:500,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        background: linear-gradient(90deg, #eaf4ff 60%, #cce2ff 100%);
+        color: #122267;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        font-family: "Mulish", sans-serif;
+      }
+
+      .wrapper {
+        display: flex;
+        width: 100%;
+        min-height: 100vh;
+        position: relative;
+      }
+
+      /* Mobile Header Toggle */
+      .mobile-header {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: #045de9;
+        z-index: 999;
+        align-items: center;
+        padding: 0 20px;
+        box-shadow: 0 2px 10px rgba(4, 93, 233, 0.3);
+      }
+
+      .mobile-toggle {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 28px;
+        cursor: pointer;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease;
+      }
+
+      .mobile-toggle:hover {
+        transform: scale(1.1);
+      }
+
+      .mobile-title {
+        color: #fff;
+        font-size: 20px;
+        font-weight: 700;
+        margin-left: 15px;
+        letter-spacing: 0.5px;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 260px;
+        background: linear-gradient(180deg, #045de9 0%, #0351c9 100%);
+        color: #fff;
+        box-shadow: 2px 0 14px 0 rgba(42, 111, 241, 0.19);
+        display: flex;
+        flex-direction: column;
+        padding-top: 45px;
+        gap: 12px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        z-index: 998;
+        overflow-y: auto;
+      }
+
+      .sidebar-title {
+        text-align: center;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        margin-bottom: 34px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .sidebar-title i {
+        font-size: 30px;
+      }
+
+      .sidebar-btn {
+        display: flex;
+        align-items: center;
+        background: none;
+        border: none;
+        color: inherit;
+        font-size: 16px;
+        padding: 16px 30px;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-radius: 0 25px 25px 0;
+        font-weight: 600;
+        outline: none;
+        gap: 12px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .sidebar-btn::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 0;
+        background: rgba(255, 255, 255, 0.1);
+        transition: width 0.3s ease;
+      }
+
+      .sidebar-btn:hover::before {
+        width: 100%;
+      }
+
+      .sidebar-btn i {
+        font-size: 20px;
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar-btn:hover i {
+        transform: scale(1.2);
+      }
+
+      .sidebar-btn.active,
+      .sidebar-btn:hover {
+        background: linear-gradient(
+          90deg,
+          rgba(66, 155, 231, 0.9) 70%,
+          #045de9 100%
+        );
+        color: #fff;
+        box-shadow: 2px 4px 15px 0 rgba(13, 25, 112, 0.25);
+        transform: translateX(5px);
+      }
+
+      .sidebar-btn.active {
+        border-left: 4px solid #fff;
+      }
+
+      /* Backdrop overlay for mobile */
+      .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 997;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .sidebar-backdrop.active {
+        opacity: 1;
+      }
+
+      /* Main content */
+      .main-content {
+        margin-left: 260px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 56px 40px;
+        min-height: 100vh;
+        transition: margin-left 0.3s ease;
+      }
+
+      .home-btn {
+        align-self: flex-start;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1000;
+        background: linear-gradient(135deg, #045de9 0%, #0351c9 100%);
+        color: #fff;
+        text-decoration: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(4, 93, 233, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .home-btn:hover {
+        background: linear-gradient(135deg, #023ea4 0%, #022f7a 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(4, 93, 233, 0.4);
+      }
+
+      h1 {
+        margin-bottom: 40px;
+        color: #045de9;
+        font-weight: 700;
+        font-size: 36px;
+        text-align: center;
+        text-shadow: 2px 2px 4px rgba(4, 93, 233, 0.1);
+        animation: fadeInDown 0.6s ease;
+      }
+
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .cards {
+        width: 100%;
+        max-width: 800px;
+        display: flex;
+        flex-direction: column;
+        gap: 38px;
+        position: relative;
+        min-height: 500px;
+      }
+
+      .policy-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px 0 rgba(39, 102, 97, 0.12);
+        padding: 40px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(30px) scale(0.95);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .policy-card.active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+        box-shadow: 0 10px 40px 0 rgba(19, 106, 217, 0.25);
+        z-index: 10;
+        animation: cardSlideIn 0.6s ease;
+      }
+
+      @keyframes cardSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .card-title {
+        display: flex;
+        align-items: center;
+        font-size: 26px;
+        font-weight: 700;
+        color: #045de9;
+        margin-bottom: 24px;
+        gap: 12px;
+        padding-bottom: 16px;
+        border-bottom: 3px solid #e0f0ff;
+      }
+
+      .card-title i {
+        font-size: 28px;
+      }
+
+      ul {
+        color: #242b4e;
+        margin-left: 25px;
+        margin-bottom: 0;
+        font-size: 16px;
+        line-height: 1.9;
+      }
+
+      ul li {
+        margin-bottom: 12px;
+        transition: all 0.2s ease;
+        padding-left: 5px;
+      }
+
+      ul li:hover {
+        color: #045de9;
+        transform: translateX(5px);
+      }
+
+      .note {
+        font-size: 15px;
+        color: #0351c9;
+        background: linear-gradient(135deg, #eaf4ff 0%, #d4e8ff 100%);
+        padding: 18px 22px;
+        border-radius: 10px;
+        margin-top: 24px;
+        margin-bottom: 12px;
+        box-shadow: 0 3px 15px rgba(4, 93, 233, 0.2);
+        border-left: 4px solid #045de9;
+        font-weight: 600;
+        animation: pulseNote 2s ease-in-out infinite;
+      }
+
+      @keyframes pulseNote {
+        0%,
+        100% {
+          box-shadow: 0 3px 15px rgba(4, 93, 233, 0.2);
+        }
+        50% {
+          box-shadow: 0 5px 20px rgba(4, 93, 233, 0.3);
+        }
+      }
+
+      /* Loading overlay */
+      #loadingOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, #045de9 0%, #0351c9 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease, visibility 0.5s ease;
+      }
+
+      #loadingOverlay.hidden {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .spinner {
+        width: 60px;
+        height: 60px;
+        border: 6px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Tablet Responsive */
+      @media (max-width: 1024px) {
+        .main-content {
+          margin-left: 260px;
+          padding: 40px 30px;
+        }
+
+        h1 {
+          font-size: 32px;
+        }
+
+        .cards {
+          max-width: 700px;
+        }
+
+        .policy-card {
+          padding: 35px;
+        }
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 768px) {
+        .mobile-header {
+          display: flex;
+        }
+
+        .sidebar {
+          transform: translateX(-100%);
+          width: 280px;
+        }
+
+        .sidebar.active {
+          transform: translateX(0);
+          box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar-backdrop {
+          display: block;
+        }
+
+        .main-content {
+          margin-left: 0;
+          padding: 80px 20px 30px;
+          width: 100%;
+        }
+
+        h1 {
+          font-size: 28px;
+          margin-bottom: 30px;
+        }
+
+        .cards {
+          max-width: 100%;
+          min-height: 400px;
+        }
+
+        .policy-card {
+          padding: 28px 20px;
+          border-radius: 12px;
+        }
+
+        .card-title {
+          font-size: 22px;
+          margin-bottom: 20px;
+        }
+
+        ul {
+          font-size: 15px;
+          margin-left: 20px;
+        }
+
+        .home-btn {
+          padding: 10px 18px;
+          font-size: 14px;
+        }
+
+        .sidebar-btn {
+          padding: 18px 25px;
+          font-size: 17px;
+        }
+      }
+
+      /* Small Mobile */
+      @media (max-width: 480px) {
+        .mobile-title {
+          font-size: 16px;
+        }
+
+        .main-content {
+          padding: 75px 15px 25px;
+        }
+
+        h1 {
+          font-size: 24px;
+        }
+
+        .policy-card {
+          padding: 22px 16px;
+        }
+
+        .card-title {
+          font-size: 20px;
+          gap: 8px;
+        }
+
+        .card-title i {
+          font-size: 22px;
+        }
+
+        ul {
+          font-size: 14px;
+          margin-left: 18px;
+        }
+
+        .note {
+          font-size: 14px;
+          padding: 15px 18px;
+        }
+      }
+
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #045de9;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #0351c9;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Loading overlay -->
+    <div id="loadingOverlay">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Mobile Header with Toggle -->
+    <div class="mobile-header">
+      <button class="mobile-toggle" onclick="toggleSidebar()">
+        <i class="ri-menu-line"></i>
+      </button>
+      <div class="mobile-title">Policy Center</div>
+    </div>
+
+    <!-- Sidebar Backdrop -->
+    <div class="sidebar-backdrop" onclick="closeSidebar()"></div>
+
+    <div class="wrapper">
+      <nav class="sidebar" id="sidebar">
+        <div class="sidebar-title">
+          <i class="ri-shield-check-line"></i>
+          Policies
+        </div>
+        <button
+          class="sidebar-btn active"
+          onclick="showCard('returnCard')"
+          id="returnBtn"
+        >
+          <i class="ri-arrow-go-back-line"></i>
+          <span>Return Policy</span>
+        </button>
+        <button
+          class="sidebar-btn"
+          onclick="showCard('refundCard')"
+          id="refundBtn"
+        >
+          <i class="ri-refund-2-line"></i>
+          <span>Refund Policy</span>
+        </button>
+        <button
+          class="sidebar-btn"
+          onclick="showCard('termsCard')"
+          id="termsBtn"
+        >
+          <i class="ri-file-list-3-line"></i>
+          <span>Terms & Conditions</span>
+        </button>
+        <button
+          class="sidebar-btn"
+          onclick="showCard('privacyCard')"
+          id="privacyBtn"
+        >
+          <i class="ri-lock-password-line"></i>
+          <span>Privacy Policy</span>
+        </button>
+      </nav>
+
+      <main class="main-content">
+        <a class="home-btn" href="index.html">
+          <i class="ri-home-4-line"></i>
+          Go to Home
+        </a>
+        <h1>Return, Refund & Terms</h1>
+        <section class="cards">
+          <!-- Return Policy -->
+          <div class="policy-card active" id="returnCard">
+            <div class="card-title">
+              <i class="ri-arrow-go-back-line"></i>
+              Return Policy
+            </div>
+            <ul>
+              <li>
+                Return vehicles by the agreed date and time at the specified
+                location.
+              </li>
+              <li>
+                Return the vehicle in the same condition as rented, excluding
+                normal wear and tear.
+              </li>
+              <li>
+                Late returns incur extra charges per the hourly/daily rate.
+              </li>
+              <li>Excessive dirt may result in a cleaning fee.</li>
+              <li>
+                Refill fuel to the original level, or refueling charges will
+                apply.
+              </li>
+              <li>
+                Damage, missing parts, or loss will be charged as per actual
+                repair or replacement cost.
+              </li>
+              <li>
+                Inspection with our representative is recommended at return.
+              </li>
+            </ul>
+          </div>
+
+          <!-- Refund Policy -->
+          <div class="policy-card" id="refundCard">
+            <div class="card-title">
+              <i class="ri-refund-2-line"></i>
+              Refund Policy
+            </div>
+            <ul>
+              <li>
+                Full refund for cancellations at least 48 hours before pickup.
+              </li>
+              <li>25% fee for cancellations within 48 hours of pickup.</li>
+              <li>
+                No refunds for cancellations after scheduled pickup or no-shows.
+              </li>
+              <li>Modifications subject to price and availability.</li>
+              <li>
+                If the vehicle is unavailable, a full refund or replacement will
+                be offered.
+              </li>
+              <li>
+                Refunds processed within 7–10 business days to the original
+                payment method.
+              </li>
+            </ul>
+            <div class="note">
+              <i class="ri-information-line"></i>
+              For any questions or special cases, please contact our support
+              team.
+            </div>
+          </div>
+
+          <!-- Terms & Conditions -->
+          <div class="policy-card" id="termsCard">
+            <div class="card-title">
+              <i class="ri-file-list-3-line"></i>
+              Terms & Conditions
+            </div>
+            <ul>
+              <li>
+                <strong>Eligibility:</strong> Renter must be at least 18 years
+                old with a valid driving license and government ID.
+              </li>
+              <li>
+                <strong>Booking & Payment:</strong> Full payment before trip;
+                prices exclude tolls, fuel, and late fees.
+              </li>
+              <li>
+                <strong>Vehicle Usage:</strong> Use for personal purposes only;
+                no illegal or commercial use; keep it clean.
+              </li>
+              <li>
+                <strong>Fuel Policy:</strong> Return with the same fuel level as
+                received; missing fuel will be charged at market rates.
+              </li>
+              <li>
+                <strong>Damage & Accidents:</strong> Renter bears responsibility
+                for damages; must inform company immediately after incidents.
+              </li>
+              <li>
+                <strong>Late Return:</strong> Grace period of 30 minutes; beyond
+                that, hourly or daily rates apply.
+              </li>
+              <li>
+                <strong>Cancellation & Refund:</strong> Full refund if canceled
+                24 hours before pickup; otherwise, fees may apply.
+              </li>
+              <li>
+                <strong>Shipping & Delivery:</strong>
+                <ul>
+                  <li>
+                    We offer vehicle delivery and pickup at specified addresses
+                    within the service area.
+                  </li>
+                  <li>
+                    Delivery fees may apply based on distance and time of day.
+                  </li>
+                  <li>
+                    Delivery requests must be made at least 24 hours in advance.
+                  </li>
+                  <li>
+                    Customer must inspect the vehicle at delivery and sign
+                    confirmation of receipt.
+                  </li>
+                  <li>
+                    In case of delivery delay, we will notify the customer
+                    promptly and reschedule.
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <strong>Company Rights:</strong> Company may refuse or cancel
+                bookings due to unavailability or misuse.
+              </li>
+              <li>
+                <strong>Customer Responsibility:</strong> Follow all traffic
+                rules; fines or violations are customer's responsibility.
+              </li>
+              <li>
+                <strong>Agreement:</strong> By booking, you agree to all these
+                terms and conditions.
+              </li>
+            </ul>
+            <div class="note">
+              <i class="ri-alert-line"></i>
+              Please review all conditions carefully before confirming your
+              booking.
+            </div>
+          </div>
+
+          <!-- Privacy Policy -->
+          <div class="policy-card" id="privacyCard">
+            <div class="card-title">
+              <i class="ri-lock-password-line"></i>
+              Privacy Policy
+            </div>
+            <ul>
+              <li>
+                <strong>1. Information Collection</strong><br />
+                We collect personal data you provide when you register, book, or
+                contact us, including name, email, phone number, driver's
+                license details, payment information, and booking history.
+              </li>
+              <li>
+                <strong>2. Use of Information</strong><br />
+                Collected data is used to process bookings, verify identity,
+                communicate updates, improve our services, and comply with legal
+                obligations.
+              </li>
+              <li>
+                <strong>3. Cookies and Tracking</strong><br />
+                We use cookies and similar technologies to enhance site
+                navigation, remember preferences, analyze usage patterns, and
+                deliver a personalized experience.
+              </li>
+              <li>
+                <strong>4. Data Sharing</strong><br />
+                Personal information is shared only with:
+                <ul>
+                  <li>Payment processors for transaction handling</li>
+                  <li>
+                    Third-party providers for vehicle maintenance, insurance,
+                    and roadside support
+                  </li>
+                  <li>
+                    Authorities as required by law (e.g., accident
+                    investigations)
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <strong>5. Data Security</strong><br />
+                We implement industry-standard security measures (encryption,
+                access controls, secure hosting) to protect your data against
+                unauthorized access or alteration.
+              </li>
+              <li>
+                <strong>6. Data Retention</strong><br />
+                Personal data is retained only as long as necessary for business
+                operations, legal compliance, and dispute resolution. You may
+                request deletion of your account at any time.
+              </li>
+              <li>
+                <strong>7. Your Rights</strong><br />
+                You have the right to access, correct, or delete your personal
+                data, object to processing, and obtain a copy of the information
+                we hold about you. To exercise these rights, contact our Data
+                Protection Officer at parvejpinjari007@gmail.com.
+              </li>
+              <li>
+                <strong>8. Children's Privacy</strong><br />
+                Our services are not directed to children under 18. We do not
+                knowingly collect personal data from minors.
+              </li>
+              <li>
+                <strong>9. Policy Updates</strong><br />
+                We may update this Privacy Policy at any time. Changes take
+                effect when posted. Please review periodically for the latest
+                information.
+              </li>
+              <li>
+                <strong>10. Contact Us</strong><br />
+                If you have questions or concerns regarding this Privacy Policy,
+                please contact:<br />
+                Car Rental Company<br />
+                Email: parvejpinjari007@gmail.com<br />
+                Phone: +1-800-123-4567
+              </li>
+            </ul>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      // Show specific policy card
+      function showCard(cardId) {
+        const cards = document.querySelectorAll(".policy-card");
+        const buttons = document.querySelectorAll(".sidebar-btn");
+
+        cards.forEach((c) => c.classList.remove("active"));
+        buttons.forEach((b) => b.classList.remove("active"));
+
+        const card = document.getElementById(cardId);
+        card.classList.add("active");
+
+        // Activate corresponding button
+        if (cardId === "returnCard")
+          document.getElementById("returnBtn").classList.add("active");
+        if (cardId === "refundCard")
+          document.getElementById("refundBtn").classList.add("active");
+        if (cardId === "termsCard")
+          document.getElementById("termsBtn").classList.add("active");
+        if (cardId === "privacyCard")
+          document.getElementById("privacyBtn").classList.add("active");
+
+        // Close sidebar on mobile after selection
+        if (window.innerWidth <= 768) {
+          closeSidebar();
+        }
+      }
+
+      // Toggle sidebar on mobile
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const backdrop = document.querySelector(".sidebar-backdrop");
+
+        sidebar.classList.toggle("active");
+        backdrop.classList.toggle("active");
+      }
+
+      // Close sidebar
+      function closeSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const backdrop = document.querySelector(".sidebar-backdrop");
+
+        sidebar.classList.remove("active");
+        backdrop.classList.remove("active");
+      }
+
+      // Loading screen
+      window.addEventListener("DOMContentLoaded", () => {
+        const overlay = document.getElementById("loadingOverlay");
+        setTimeout(() => overlay.classList.add("hidden"), 600);
+      });
+
+      // Close sidebar when clicking outside on mobile
+      document.addEventListener("click", (e) => {
+        const sidebar = document.getElementById("sidebar");
+        const toggle = document.querySelector(".mobile-toggle");
+
+        if (
+          window.innerWidth <= 768 &&
+          sidebar.classList.contains("active") &&
+          !sidebar.contains(e.target) &&
+          !toggle.contains(e.target)
+        ) {
+          closeSidebar();
+        }
+      });
+
+      // Handle window resize
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 768) {
+          closeSidebar();
+        }
+      });
+    </script>
+  </body>
+</html>

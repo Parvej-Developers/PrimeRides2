@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Driver Panel - PrimeRides</title>
+    <link rel="stylesheet" href="user-panel.css" />
+    <link rel="stylesheet" href="driver-panel.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  </head>
+  <body>
+    <button class="mobile-menu-toggle" id="menuToggle">☰</button>
+
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="profile-img" id="driverAvatar">
+          <i class="ri-steering-2-line"></i>
+        </div>
+        <h2 class="user-name" id="driverName">Driver Name</h2>
+        <span class="user-badge" style="background: #dcfce7; color: #15803d"
+          >Verified Driver</span
+        >
+      </div>
+
+      <div class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="#" class="nav-link active" data-section="dashboard">
+              <i class="ri-dashboard-3-line"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link" data-section="rides">
+              <i class="ri-steering-fill"></i>
+              <span>My Rides</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link" data-section="earnings">
+              <i class="ri-wallet-3-line"></i>
+              <span>Earnings</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link" data-section="profile">
+              <i class="ri-user-settings-line"></i>
+              <span>Profile</span>
+            </a>
+          </li>
+          <div class="status-toggle-container">
+            <span id="statusLabel">Status: Inactive</span>
+            <label class="switch">
+              <input
+                type="checkbox"
+                id="activeStatusToggle"
+                onchange="toggleActiveStatus()"
+              />
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </ul>
+      </div>
+      <div class="sidebar-footer">
+        <a
+          href="user.html"
+          class="back-home-btn"
+          style="color: #10b981; font-weight: 700"
+        >
+          <i class="ri-user-shared-2-line"></i>
+          <span style="margin-left: 0.5em">Switch to User</span>
+        </a>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <section id="dashboard-section" class="page active">
+        <div class="page-header">
+          <div class="page-title">
+            <h1>Driver Dashboard</h1>
+            <p>Welcome back! Here is your performance for today.</p>
+          </div>
+        </div>
+
+        <div
+          class="stats-grid"
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+          "
+        >
+          <div
+            class="stat-card-mini"
+            style="
+              background: white;
+              padding: 1.5rem;
+              border-radius: 12px;
+              box-shadow: var(--shadow);
+            "
+          >
+            <small style="color: #6b7280">Total Rides</small>
+            <h2 id="totalRidesCount">0</h2>
+          </div>
+          <div
+            class="stat-card-mini"
+            style="
+              background: white;
+              padding: 1.5rem;
+              border-radius: 12px;
+              box-shadow: var(--shadow);
+            "
+          >
+            <small style="color: #6b7280">Today's Earning</small>
+            <h2 id="todayEarning">₹0</h2>
+          </div>
+          <div
+            class="stat-card-mini"
+            style="
+              background: white;
+              padding: 1.5rem;
+              border-radius: 12px;
+              box-shadow: var(--shadow);
+            "
+          >
+            <small style="color: #6b7280">Profile Status</small>
+            <h2 style="color: #10b981; font-size: 1.2rem">Active</h2>
+          </div>
+        </div>
+
+        <div id="activeRideContainer"></div>
+      </section>
+
+      <section id="rides-section" class="page">
+        <div class="page-header">
+          <div class="page-title">
+            <h1>My Rides</h1>
+            <p>Manage your assigned and completed trips.</p>
+          </div>
+        </div>
+        <div class="bookings-container" id="driverRidesList">
+          <p style="text-align: center">Loading your rides...</p>
+        </div>
+      </section>
+
+      <section id="earnings-section" class="page">
+        <div class="page-header">
+          <div class="page-title">
+            <h1>Earnings History</h1>
+            <p>Track your payouts and ride commissions.</p>
+          </div>
+        </div>
+        <div class="update-form" style="max-width: 100%">
+          <div id="earningsSummary" style="padding: 1rem">
+            <div
+              style="
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 2rem;
+                border-radius: 15px;
+                margin-bottom: 2rem;
+              "
+            >
+              <small>Total Balance</small>
+              <h1 id="totalWalletBalance" style="font-size: 2.5rem">₹0.00</h1>
+            </div>
+            <div id="earningsTableContainer"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div
+      id="statusConfirmModal"
+      class="modal-overlay"
+      style="
+        display: none;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+      "
+    >
+      <div
+        class="modal-box"
+        style="
+          max-width: 400px;
+          text-align: center;
+          padding: 2rem;
+          border-radius: 20px;
+        "
+      >
+        <div id="statusIcon" style="font-size: 3.5rem; margin-bottom: 1rem">
+          <i class="ri-無線-station-line"></i>
+        </div>
+        <h3
+          id="statusTitle"
+          style="
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+          "
+        >
+          Go Online?
+        </h3>
+        <p
+          id="statusMessage"
+          style="color: var(--text-light); margin-bottom: 2rem"
+        >
+          Ready to receive new ride requests?
+        </p>
+
+        <div style="display: flex; gap: 1rem; justify-content: center">
+          <button
+            onclick="cancelStatusChange()"
+            class="btn btn-secondary"
+            style="flex: 1; justify-content: center"
+          >
+            Cancel
+          </button>
+          <button
+            id="confirmStatusBtn"
+            class="btn btn-primary"
+            style="flex: 1; justify-content: center"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="supabaseClient.js"></script>
+    <script src="driver-panel.js"></script>
+  </body>
+</html>

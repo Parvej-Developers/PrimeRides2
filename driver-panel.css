@@ -1,0 +1,103 @@
+/* Driver Specific Theme Colors */
+:root {
+  --driver-success: #10b981;
+  --driver-dark: #064e3b;
+  --driver-bg: #f0fdf4;
+}
+
+/* Active Ride Card */
+.active-ride-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  border-left: 5px solid var(--driver-success);
+  margin-bottom: 2rem;
+  animation: fadeIn 0.5s ease;
+}
+
+.ride-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.ride-body {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 1.5rem;
+}
+
+.ride-img img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Workflow Buttons */
+.btn-status {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  transition: 0.3s;
+  margin-top: 1rem;
+}
+
+.btn-accept {
+  background: #3b82f6;
+  color: white;
+}
+.btn-start {
+  background: #f59e0b;
+  color: white;
+}
+.btn-complete {
+  background: #10b981;
+  color: white;
+}
+
+/* Earnings Table */
+.earnings-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.9rem;
+}
+
+.earnings-row.header {
+  font-weight: 700;
+  background: #f9fafb;
+}
+
+/* Sidebar Switch Overrides */
+.back-home-btn:hover {
+  background: #dcfce7 !important;
+  border-radius: 8px;
+  padding: 5px 10px;
+}
+/* Modal Pop Animation */
+#statusConfirmModal.active .modal-box {
+  animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalPop {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-overlay {
+  transition: all 0.3s ease;
+}

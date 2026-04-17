@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Available Cars</title>
+  <link rel="stylesheet" href="Explore_cars.css" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
+  <!-- Icons link  -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+</head>
+
+<body>
+  <!-- Header section Starts-->
+  <header>
+    <nav>
+      <div class="nav__header">
+        <div class="nav__logo">
+          <a href="#">PrimeRides</a>
+        </div>
+        <div class="nav__menu__btn" id="menu-btn">
+          <i class="ri-menu-line"></i>
+        </div>
+      </div>
+
+      <ul class="nav__links" id="nav-links">
+        <li><a href="index.html#home">Home</a></li>
+        <li><a href="#rent">Rent</a></li>
+        <li><a href="#service">Services</a></li>
+        <li><a href="#ride">Ride</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <!-- Dynamic Auth Buttons for Mobile will be injected here -->
+      </ul>
+
+      <div class="nav__btns">
+        <!-- Dynamic Auth Buttons for Desktop will be injected here -->
+      </div>
+    </nav>
+  </header>
+  <!-- Login & Signup -->
+  <!-- Overlay + Modal -->
+  <div class="overlay" id="overlay">
+    <div class="modal" id="modal">
+      <!-- Dynamic content will load here -->
+    </div>
+  </div>
+
+  <!-- Login & Signup ends..-->
+
+  <!-- Header section Ends -->
+  <!-- Front section -->
+  <div class="front-part">
+    <h2>Available Cars</h2>
+    <p>
+      Browse our selection of premium vehicles available for your next
+      adventure
+    </p>
+    <!-- Search container -->
+    <div class="container">
+      <!-- Search Bar -->
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search cars..." />
+
+        <!-- Search Icon -->
+        <div id="search">
+          <img src="icons/search_icon.svg" alt="Search" />
+        </div>
+
+        <!-- (Optional) Filter Icon -->
+
+
+        <!-- Add this HTML code inside your search-container div, right after the filter icon -->
+
+        <!-- Filter Icon with Badge (Updated) -->
+        <div id="filter">
+          <img src="icons/filter_icon.svg" alt="Filter" />
+          <span class="filter-badge">0</span>
+        </div>
+
+        <!-- Filter Panel -->
+        <div class="filter-panel" id="filterPanel">
+          <h3>
+            <i class="ri-filter-3-line"></i>
+            Filter Cars
+          </h3>
+
+          <!-- Price Range Filter -->
+          <div class="filter-group">
+            <label for="priceRange">Price Range (per day)</label>
+            <select id="priceRange">
+              <option value="all">All Prices</option>
+              <option value="0-2000">Under ₹2,000</option>
+              <option value="2000-5000">₹2,000 - ₹5,000</option>
+              <option value="5000-10000">₹5,000 - ₹10,000</option>
+              <option value="10000-99999">Above ₹10,000</option>
+            </select>
+          </div>
+
+          <!-- Available Cars Only -->
+          <div class="filter-group">
+            <div class="checkbox-filter">
+              <input type="checkbox" id="availableOnly" />
+              <label for="availableOnly">Available Cars Only</label>
+            </div>
+          </div>
+
+          <!-- Fuel Type Filter -->
+          <div class="filter-group">
+            <label for="fuelType">Fuel Type</label>
+            <select id="fuelType">
+              <option value="all">All Fuel Types</option>
+              <option value="petrol">Petrol</option>
+              <option value="diesel">Diesel</option>
+              <option value="electric">Electric</option>
+              <option value="hybrid">Hybrid</option>
+            </select>
+          </div>
+
+          <!-- Transmission Type Filter -->
+          <div class="filter-group">
+            <label for="transmission">Transmission Type</label>
+            <select id="transmission">
+              <option value="all">All Transmissions</option>
+              <option value="automatic">Automatic</option>
+              <option value="manual">Manual</option>
+            </select>
+          </div>
+
+          <!-- Number of Seats Filter -->
+          <div class="filter-group">
+            <label for="seats">Number of Seats</label>
+            <select id="seats">
+              <option value="all">All Seats</option>
+              <option value="2">2 Seats</option>
+              <option value="4">4 Seats</option>
+              <option value="5">5 Seats</option>
+              <option value="7">7 Seats</option>
+              <option value="8">8+ Seats</option>
+            </select>
+          </div>
+
+          <!-- Filter Actions -->
+          <div class="filter-actions">
+            <button class="reset-btn" id="resetFilters">Reset</button>
+            <button class="apply-btn" id="applyFilters">Apply Filters</button>
+          </div>
+        </div>
+
+      </div>
+
+
+      <h2 class="available-cars"></h2>
+      <div class="card-grid">
+      </div>
+    </div>
+
+    <!-- Footer Section Starts  -->
+    <footer class="footer">
+      <div class="social">
+        <a href="https://www.facebook.com/"><i class="bx bxl-facebook-circle"></i></a>
+        <a href="https://in.linkedin.com/"><i class="bx bxl-linkedin-square"></i></a>
+        <a href="https://web.telegram.org"><i class="bx bxl-telegram"></i></a>
+        <a href="https://www.instagram.com"><i class="bx bxl-instagram"></i></a>
+      </div>
+
+      <ul class="list">
+        <li>
+          <a href="index.html#home">Home</a>
+        </li>
+        <li>
+          <a href="index.html#rent">Rent</a>
+        </li>
+        <li>
+          <a href="index.html#service">Services</a>
+        </li>
+        <li>
+          <a href="index.html#ride">Ride</a>
+        </li>
+        <li>
+          <a href="contact.html">Contact</a>
+        </li>
+        <li>
+          <a href="privacy.html">Term & Condition</a>
+        </li>
+      </ul>
+      <p class="copyright">@ PrimeRides | ALL Rights Reserverd</p>
+    </footer>
+    <!-- Footer Section ends  -->
+
+    <!-- JS -->
+   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
+<script src="auth.js"></script>
+<script src="explore.js"></script>
+
+  </body>
+
+</html>
