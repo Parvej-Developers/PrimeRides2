@@ -1710,15 +1710,14 @@ function renderDriverRequests(requests) {
 
         return `
             <div class="booking-row">
-                <div class="booking-info">
+                <div class="booking-info" data-label="Applicant">
                     <div class="customer-info">
                         <strong>${fullName}</strong>
-                        <small><i class="fas fa-phone" style="font-size:10px; transform: scaleX(1);"></i> ${user.phone || 'N/A'}</small>
-                        <small style="font-size:10px; color:#999;">UID: ${user.id.substring(0,8)}</small>
+                        <small><i class="fas fa-phone"></i> ${user.phone || 'N/A'}</small>
                     </div>
                 </div>
 
-                <div class="booking-details">
+                <div class="booking-details" data-label="Verification Docs">
                     <div class="doc-card-container">
                         <small>License: <b>${user.license_number || 'N/A'}</b></small>
                         <div class="doc-badge-group">
@@ -1732,17 +1731,17 @@ function renderDriverRequests(requests) {
                     </div>
                 </div>
 
-                <div class="booking-duration">
+                <div class="booking-duration" data-label="Request Date">
                     <span class="date-pill">${new Date(req.created_at).toLocaleDateString('en-IN')}</span>
                 </div>
 
-                <div class="booking-status">
+                <div class="booking-status" data-label="Status">
                     <span class="status-badge ${req.status}">
                         ${req.status.charAt(0).toUpperCase() + req.status.slice(1)}
                     </span>
                 </div>
 
-                <div class="booking-actions" style="display: flex; justify-content: flex-end;">
+                <div class="booking-actions" data-label="Actions">
                     <select class="action-select admin-dropdown" onchange="updateDriverRequest('${req.id}', '${user.id}', this.value)">
                         <option value="" disabled selected>Update Status</option>
                         <option value="verification" ${req.status === 'verification' ? 'selected' : ''}>Verification</option>

@@ -1065,3 +1065,60 @@ body.menu-open {
 #customConfirmModal .btn:active {
   transform: scale(0.95);
 }
+/* Mobile Responsive for Manage Drivers */
+@media (max-width: 968px) {
+  /* Hide the header row on mobile */
+  #manage-drivers .booking-row.header {
+    display: none;
+  }
+
+  #manage-drivers .booking-table {
+    background: transparent;
+    border: none;
+  }
+
+  /* Transform rows into cards */
+  #manage-drivers .booking-row {
+    display: flex !important;
+    flex-direction: column;
+    background: white;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--gray-200);
+    gap: 12px;
+  }
+
+  /* Add Labels before content so users know what the data is */
+  #manage-drivers .booking-row > div::before {
+    content: attr(data-label);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* Specific adjustments for mobile layout */
+  #manage-drivers .booking-info {
+    border-bottom: 1px solid var(--gray-100);
+    padding-bottom: 10px;
+  }
+
+  #manage-drivers .booking-actions {
+    margin-top: 10px;
+    justify-content: flex-start !important;
+    width: 100%;
+  }
+
+  #manage-drivers .admin-dropdown {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .doc-badge-group {
+    flex-wrap: wrap;
+  }
+}
