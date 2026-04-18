@@ -97,58 +97,101 @@
       <!-- Profile Section -->
 
       <section id="profile-section" class="page active">
-        <div class="profile-center">
-          <div class="profile-card-big">
-            <div class="profile-card-left">
-              <div class="profile-avatar">
-                <i class="ri-user-3-line"></i>
+        <div class="profile-container">
+          <div class="profile-header-decor"></div>
+
+          <div class="profile-card-modern">
+            <div class="profile-sidebar">
+              <div class="avatar-container">
+                <div class="profile-avatar" id="mainProfileAvatar">
+                  <i class="ri-user-3-line"></i>
+                </div>
+                <div class="online-badge"></div>
               </div>
-              <div class="profile-basic">
+
+              <div class="profile-meta">
                 <h2 class="profile-name">Hembo Tingor</h2>
-                <p class="profile-role">Web Designer</p>
-                <a
-                  href="user.html#update-section"
-                  class="profile-edit-btn"
-                  title="Edit Profile"
-                >
-                  <i class="ri-edit-2-line"></i>
-                </a>
+                <span class="membership-tag">Basic Member</span>
               </div>
+
+              <div class="profile-quick-stats">
+                <div class="p-stat">
+                  <span class="p-stat-val" id="totalTrips">0</span>
+                  <span class="p-stat-label">Trips</span>
+                </div>
+                <div class="p-stat">
+                  <span class="p-stat-val">4.8</span>
+                  <span class="p-stat-label">Rating</span>
+                </div>
+              </div>
+
+              <a
+                href="#"
+                onclick="switchSection('update')"
+                class="edit-profile-pill"
+              >
+                <i class="ri-edit-line"></i> Edit Profile
+              </a>
             </div>
-            <div class="profile-card-right">
-              <div class="profile-info-grid">
-                <div>
-                  <label>Email</label>
-                  <div class="profile-info-value">Not Provided</div>
+
+            <div class="profile-details-panel">
+              <h3 class="panel-title">Personal Information</h3>
+
+              <div class="info-grid-modern">
+                <div class="info-item">
+                  <i class="ri-mail-send-line"></i>
+                  <div class="info-text">
+                    <label>Email Address</label>
+                    <p class="profile-email">Loading...</p>
+                  </div>
                 </div>
-                <div>
-                  <label>Phone</label>
-                  <div class="profile-info-value">Not Provided</div>
+
+                <div class="info-item">
+                  <i class="ri-phone-fill"></i>
+                  <div class="info-text">
+                    <label>Phone Number</label>
+                    <p class="profile-phone">Not Provided</p>
+                  </div>
                 </div>
-                <div>
-                  <label>Address</label>
-                  <div class="profile-info-value">Not Provided</div>
+
+                <div class="info-item">
+                  <i class="ri-map-pin-2-fill"></i>
+                  <div class="info-text">
+                    <label>Home Address</label>
+                    <p class="profile-address">Not Provided</p>
+                  </div>
                 </div>
-                <div>
-                  <label>Date of Birth</label>
-                  <div class="profile-info-value">Not Provided</div>
+
+                <div class="info-item">
+                  <i class="ri-cake-2-fill"></i>
+                  <div class="info-text">
+                    <label>Birthday</label>
+                    <p class="profile-dob">Not Provided</p>
+                  </div>
                 </div>
-                <div>
-                  <label>Driver's License</label>
-                  <div class="profile-info-value">Not Provided</div>
+
+                <div class="info-item">
+                  <i class="ri-id-card-fill"></i>
+                  <div class="info-text">
+                    <label>License ID</label>
+                    <p class="profile-license">Not Provided</p>
+                  </div>
                 </div>
-                <div>
-                  <label>Membership</label>
-                  <div class="profile-info-value">Basic</div>
+
+                <div class="info-item">
+                  <i class="ri-shield-check-fill"></i>
+                  <div class="info-text">
+                    <label>Account Verification</label>
+                    <p class="profile-status">Pending</p>
+                  </div>
                 </div>
-                <div>
-                  <label>Account Status</label>
-                  <div class="profile-info-value">Not Varified</div>
-                </div>
-                <div>
-                  <label>Joined On</label>
-                  <div class="profile-info-value">2023-01-15</div>
-                </div>
+              </div>
+
+              <div class="profile-footer-info">
+                <p>
+                  <i class="ri-time-line"></i> Member since
+                  <span class="profile-joined">January 2024</span>
+                </p>
               </div>
             </div>
           </div>

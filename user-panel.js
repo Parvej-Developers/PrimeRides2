@@ -193,46 +193,39 @@ function populateSidebar() {
 }
 
 async function populateUserProfile() {
-    // Get Auth email and metadata fields
     const { data: { user } } = await window.supabase.auth.getUser();
     if (!user || !currentUser) return;
 
-    // Name and Role
-    document.querySelector('.profile-name').textContent =
-        `${currentUser?.firstname || ''} ${currentUser.lastname || ''}`.trim() || 'User';
-    document.querySelector('.profile-role').textContent =
-        currentUser.role || 'User';
+    // --- Profile Avatar Fix ---
+    const avatarDiv = document.getElementById('mainProfileAvatar');
+    if (currentUser.profile_image) {
+        const url = supabase.storage.from("user-documents").getPublicUrl(currentUser.profile_image).data.publicUrl;
+        avatarDiv.innerHTML = `<img src="${url}?t=${Date.now()}" alt="Profile">`;
+    }
 
-    // Set profile fields (adjust null checks to your schema)
-    const grid = document.querySelector('.profile-info-grid');
-    if (!grid) return;
+    // --- Sidebar & Meta ---
+    document.querySelector('.profile-name').textContent = `${currentUser.firstname} ${currentUser.lastname}`;
+    document.querySelector('.membership-tag').textContent = currentUser.premium_member ? 'Premium Member' : 'Basic Member';
+    
+    // --- Stats Update (Optional: Based on your userBookings array)
+    if(userBookings) document.getElementById('totalTrips').textContent = userBookings.length;
 
-    // Format address string
-    const address = [currentUser.address, currentUser.city, currentUser.state, currentUser.zipcode]
-        .filter(Boolean).join(', ').replace(/^,+|,+$/g, '').replace(/,{2,}/g, ', ');
-
-    // Map for each label
-    const valueMap = {
-        'Email': user.email || '',
-        'Phone': currentUser.phone || 'Not provided',
-        'Address': address || 'Not provided',
-        'Date of Birth': currentUser.dateofbirth || 'Not provided',
-        "Driver's License": currentUser.license_number || 'Not provided',
-        'Membership': currentUser.premium_member ? 'Premium' : 'Basic',
-        'Account Status': currentUser.account_verified ? 'Active' : 'Pending',
-        'Joined On': currentUser.created_at ? new Date(currentUser.created_at).toLocaleDateString('en-CA') : 'Unknown'
-    };
-
-    // Set all values
-    grid.querySelectorAll('div').forEach(div => {
-        const label = div.querySelector('label');
-        const valueDiv = div.querySelector('.profile-info-value');
-        if (label && valueDiv && label.textContent in valueMap) {
-            valueDiv.textContent = valueMap[label.textContent];
-        }
-    });
+    // --- Info Grid Data Mapping ---
+    document.querySelector('.profile-email').textContent = user.email;
+    document.querySelector('.profile-phone').textContent = currentUser.phone || 'Not Provided';
+    
+    const fullAddress = [currentUser.address, currentUser.city, currentUser.state].filter(Boolean).join(', ');
+    document.querySelector('.profile-address').textContent = fullAddress || 'Not Provided';
+    
+    document.querySelector('.profile-dob').textContent = currentUser.dateofbirth || 'Not Provided';
+    document.querySelector('.profile-license').textContent = currentUser.license_number || 'Not Provided';
+    document.querySelector('.profile-status').textContent = currentUser.account_verified ? 'Verified Account' : 'Pending Verification';
+    
+    if(currentUser.created_at) {
+        const joinedDate = new Date(currentUser.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        document.querySelector('.profile-joined').textContent = joinedDate;
+    }
 }
-
 
 // Populate bookings section
 function populateUserBookings() {
