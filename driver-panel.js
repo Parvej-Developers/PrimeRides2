@@ -1,26 +1,53 @@
 let mobileMenuOpen = false;
-
-function toggleMobileMenu() {
+function toggleMobileMenu(e) {
+    if (e) e.stopPropagation(); // Prevents the document click listener from firing immediately
+    
     const sidebar = document.getElementById('sidebar');
     const toggle = document.getElementById('menuToggle');
-
-    mobileMenuOpen = !mobileMenuOpen;
-
-    if (sidebar) sidebar.classList.toggle('open', mobileMenuOpen);
-    if (toggle) toggle.classList.toggle('active', mobileMenuOpen);
-
-    document.body.classList.toggle('menu-open', mobileMenuOpen);
-}let currentUser = null;
-
+    
+    const isOpen = sidebar.classList.toggle('open');
+    if (toggle) toggle.classList.toggle('active');
+    document.body.classList.toggle('menu-open', isOpen);
+}
+let currentUser = null;
 document.addEventListener('DOMContentLoaded', async function() {
+    // 1. Run your existing security checks
     await checkDriverAccess();
+    
+    // 2. Initialize Navigation and Data
     initializeNavigation();
     loadDriverDashboard();
     await loadCurrentActiveStatus();
+
     const menuBtn = document.getElementById("menuToggle");
+    const sidebar = document.getElementById("sidebar");
+
+    // 3. Attach Toggle Event
     if (menuBtn) {
         menuBtn.addEventListener("click", toggleMobileMenu);
     }
+
+    // 4. Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 968 && sidebar.classList.contains('open')) {
+            if (!sidebar.contains(e.target) && e.target !== menuBtn) {
+                sidebar.classList.remove('open');
+                if (menuBtn) menuBtn.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            }
+        }
+    });
+
+    // 5. Close sidebar after clicking a nav link (mobile only)
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 968) {
+                sidebar.classList.remove('open');
+                if (menuBtn) menuBtn.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            }
+        });
+    });
 });
 
 // Security Check

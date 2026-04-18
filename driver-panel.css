@@ -101,3 +101,42 @@
 .modal-overlay {
   transition: all 0.3s ease;
 }
+/* Mobile Responsive Overrides */
+@media (max-width: 968px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: translateX(-100%); /* Hide by default */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    background: white;
+    width: 280px;
+    height: 100vh;
+  }
+
+  /* This class is toggled by JavaScript */
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+    padding-top: 70px; /* Space for the toggle button */
+  }
+
+  .mobile-menu-toggle {
+    display: block !important;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1100;
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+}
