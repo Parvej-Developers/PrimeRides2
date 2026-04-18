@@ -6,16 +6,44 @@ let mobileMenuOpen = false;
 let currentUser = null;
 let userBookings = [];
 
-// Initialize the page
 document.addEventListener('DOMContentLoaded', async function () {
+    
+    // 🔐 Auth check
     await checkAuthenticationAndRedirect();
+
+    // 🚀 Main initialization
     await initializeUserPanel();
+
+    // 🧭 Navigation + UI setup
     initializeNavigation();
     initializeFilters();
     initializeForm();
-    attachEventListeners();
-});
 
+    // 🎯 Mobile Menu Toggle
+    const menuBtn = document.getElementById("menuToggle");
+    if (menuBtn) {
+        menuBtn.addEventListener("click", toggleMobileMenu);
+    }
+
+    // 🎯 Close menu when clicking outside
+    document.addEventListener("click", (e) => {
+        const sidebar = document.getElementById("sidebar");
+        const toggle = document.getElementById("menuToggle");
+
+        if (
+            mobileMenuOpen &&
+            sidebar &&
+            toggle &&
+            !sidebar.contains(e.target) &&
+            !toggle.contains(e.target)
+        ) {
+            closeMobileMenu();
+        }
+    });
+
+    // 🎨 Smooth load
+    document.body.style.opacity = "1";
+});
 // Check if user is authenticated and redirect if not
 async function checkAuthenticationAndRedirect() {
     const { data: { user } } = await window.supabase.auth.getUser();
@@ -25,13 +53,6 @@ async function checkAuthenticationAndRedirect() {
         return;
     }
 }
-document.addEventListener("DOMContentLoaded", () => {
-    const menuBtn = document.getElementById("menuToggle");
-    if (menuBtn) {
-        menuBtn.addEventListener("click", toggleMobileMenu);
-    }
-    document.body.style.opacity = "1";
-});
 
 
 // Initialize user panel with dynamic data
@@ -356,16 +377,31 @@ function initializeNavigation() {
         link.addEventListener('click', e => {
             e.preventDefault();
             switchSection(link.dataset.section);
-            if (mobileMenuOpen) toggleMobileMenu();
+            if (mobileMenuOpen) closeMobileMenu();
         });
     });
 }
 function switchSection(sec) {
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
     document.querySelector(`[data-section="${sec}"]`).classList.add('active');
+
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(`${sec}-section`).classList.add('active');
+
     currentSection = sec;
+
+    if (window.innerWidth <= 900) {
+        closeMobileMenu();
+    }
+}
+function closeMobileMenu() {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('menuToggle');
+
+    mobileMenuOpen = false;
+    sidebar.classList.remove('open');
+    toggle.classList.remove('active');
+    document.body.classList.remove('menu-open');
 }
 function toggleMobileMenu() {
     const sidebar = document.getElementById('sidebar');
@@ -1040,17 +1076,6 @@ async function showBookingDetails(bookingId) {
     }
 }
 
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("updateProfileForm");
-    if (form) {
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-            updateProfile();
-        });
-    }
-});
 
 
 

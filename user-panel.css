@@ -130,7 +130,9 @@ body {
 .back-home-btn:hover {
   text-decoration: underline;
 }
-
+.sidebar {
+  will-change: left;
+}
 /* ========== Mobile Menu ========== */
 .mobile-menu-toggle {
   display: none;
@@ -1760,4 +1762,9 @@ input:checked + .slider:before {
 
 #bookingDetailsModal {
   z-index: 1500 !important;
+}
+@media (max-width: 900px) {
+  .sidebar {
+    left: -100%;
+  }
 }
