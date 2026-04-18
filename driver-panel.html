@@ -17,8 +17,21 @@
 
     <nav class="sidebar" id="sidebar">
       <div class="sidebar-header">
-        <div class="profile-img" id="driverAvatar">
-          <i class="ri-steering-2-line"></i>
+        <div
+          class="profile-img"
+          id="sidebarDriverAvatar"
+          style="
+            overflow: hidden;
+            background: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <i
+            class="ri-steering-2-line"
+            style="font-size: 2rem; color: white"
+          ></i>
         </div>
         <h2 class="user-name" id="driverName">Driver Name</h2>
         <span class="user-badge" style="background: #dcfce7; color: #15803d"
@@ -170,6 +183,68 @@
               <h1 id="totalWalletBalance" style="font-size: 2.5rem">₹0.00</h1>
             </div>
             <div id="earningsTableContainer"></div>
+          </div>
+        </div>
+      </section>
+      <section id="profile-section" class="page">
+        <div class="profile-container">
+          <div class="profile-header-decor"></div>
+          <div class="profile-card-modern">
+            <div class="profile-sidebar">
+              <div class="avatar-container">
+                <div class="profile-avatar" id="driverProfileAvatar">
+                  <i class="ri-steering-2-line"></i>
+                </div>
+                <div class="online-badge"></div>
+              </div>
+              <div class="profile-meta">
+                <h2 id="dispDriverName">Loading...</h2>
+                <span class="membership-tag">Verified Driver</span>
+              </div>
+              <div class="profile-quick-stats">
+                <div class="p-stat">
+                  <span class="p-stat-val" id="totalTripsCount">0</span>
+                  <span class="p-stat-label">Rides</span>
+                </div>
+                <div class="p-stat">
+                  <span class="p-stat-val">4.9</span>
+                  <span class="p-stat-label">Rating</span>
+                </div>
+              </div>
+            </div>
+            <div class="profile-details-panel">
+              <h3 class="panel-title">Driver Information</h3>
+              <div class="info-grid-modern">
+                <div class="info-item">
+                  <i class="ri-mail-line"></i>
+                  <div class="info-text">
+                    <label>Email Address</label>
+                    <p id="profEmail">---</p>
+                  </div>
+                </div>
+                <div class="info-item">
+                  <i class="ri-phone-line"></i>
+                  <div class="info-text">
+                    <label>Phone Number</label>
+                    <p id="profPhone">---</p>
+                  </div>
+                </div>
+                <div class="info-item">
+                  <i class="ri-id-card-line"></i>
+                  <div class="info-text">
+                    <label>License Number</label>
+                    <p id="profLicense">---</p>
+                  </div>
+                </div>
+                <div class="info-item">
+                  <i class="ri-map-pin-line"></i>
+                  <div class="info-text">
+                    <label>City/State</label>
+                    <p id="profLocation">---</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

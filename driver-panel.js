@@ -51,13 +51,14 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 // Security Check
+// Sidebar Profile Image Update logic (checkDriverAccess function ke andar update karein)
 async function checkDriverAccess() {
     const { data: { user } } = await window.supabase.auth.getUser();
     if (!user) { window.location.href = 'index.html'; return; }
 
     const { data: profile } = await window.supabase
         .from('users')
-        .select('firstname, lastname, is_driver, driver_status')
+        .select('firstname, lastname, is_driver, driver_status, profile_image') // profile_image field select karein
         .eq('id', user.id)
         .single();
 
@@ -67,6 +68,22 @@ async function checkDriverAccess() {
     } else {
         currentUser = user;
         document.getElementById('driverName').textContent = profile.firstname;
+
+        // --- SIDEBAR PROFILE IMAGE LOGIC START ---
+        const sidebarAvatar = document.getElementById('sidebarDriverAvatar');
+        if (profile.profile_image) {
+            // Storage bucket se public URL nikalna
+            const { data } = window.supabase.storage
+                .from('user-documents')
+                .getPublicUrl(profile.profile_image);
+
+            // Icon ki jagah Image insert karna
+            sidebarAvatar.innerHTML = `
+                <img src="${data.publicUrl}?t=${Date.now()}" 
+                     style="width: 100%; height: 100%; object-fit: cover;">
+            `;
+        }
+        // --- SIDEBAR PROFILE IMAGE LOGIC END ---
     }
 }
 
@@ -495,4 +512,76 @@ async function handleResponse(rideId, decision) {
         console.error("Error handling response:", err.message);
         alert("Operation failed: " + err.message);
     }
+}
+// Profile Loader Function
+async function loadDriverProfile() {
+    try {
+        const { data: { user } } = await window.supabase.auth.getUser();
+        
+        const { data: profile, error } = await window.supabase
+            .from('users')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+
+        if (error) throw error;
+
+        // Populate Text Fields
+        document.getElementById('dispDriverName').textContent = `${profile.firstname} ${profile.lastname}`;
+        document.getElementById('profEmail').textContent = user.email;
+        document.getElementById('profPhone').textContent = profile.phone || 'Not Provided';
+        document.getElementById('profLicense').textContent = profile.license_number || 'N/A';
+        document.getElementById('profLocation').textContent = `${profile.city || ''}, ${profile.state || ''}`;
+
+        // Avatar Handling
+        if (profile.profile_image) {
+            const avatarDiv = document.getElementById('driverProfileAvatar');
+            const { data } = window.supabase.storage.from('user-documents').getPublicUrl(profile.profile_image);
+            avatarDiv.innerHTML = `<img src="${data.publicUrl}?t=${Date.now()}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+        }
+
+        // Stats Handling
+        const { count } = await window.supabase
+            .from('bookings')
+            .select('*', { count: 'exact', head: true })
+            .eq('driver_id', user.id)
+            .eq('driver_status', 'completed');
+        
+        document.getElementById('totalTripsCount').textContent = count || 0;
+
+    } catch (err) {
+        console.error("Profile load error:", err.message);
+    }
+}
+
+// Updated Navigation (Fix for "Baki code band ho gaya")
+function initializeNavigation() {
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const section = link.dataset.section;
+            
+            // 1. Hide all pages safely
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            
+            // 2. Show targeted page
+            const targetPage = document.getElementById(`${section}-section`);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            // 3. Update Active Nav Link
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+
+            // 4. Specific Loaders
+            if (section === 'profile') {
+                loadDriverProfile();
+            } else if (section === 'earnings') {
+                loadEarningsHistory();
+            } else if (section === 'rides') {
+                loadMyRidesHistory();
+            }
+        });
+    });
 }
