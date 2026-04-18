@@ -1,10 +1,26 @@
-let currentUser = null;
+let mobileMenuOpen = false;
+
+function toggleMobileMenu() {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('menuToggle');
+
+    mobileMenuOpen = !mobileMenuOpen;
+
+    if (sidebar) sidebar.classList.toggle('open', mobileMenuOpen);
+    if (toggle) toggle.classList.toggle('active', mobileMenuOpen);
+
+    document.body.classList.toggle('menu-open', mobileMenuOpen);
+}let currentUser = null;
 
 document.addEventListener('DOMContentLoaded', async function() {
     await checkDriverAccess();
     initializeNavigation();
     loadDriverDashboard();
     await loadCurrentActiveStatus();
+    const menuBtn = document.getElementById("menuToggle");
+    if (menuBtn) {
+        menuBtn.addEventListener("click", toggleMobileMenu);
+    }
 });
 
 // Security Check
