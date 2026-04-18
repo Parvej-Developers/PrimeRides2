@@ -1517,144 +1517,132 @@ function formatPrice(value) {
 // ===============================
 // EXPORT DASHBOARD AS PDF (FINAL)
 // ===============================
+// ==========================================
+// NEW & IMPROVED: PDF EXPORT (Modern UI + Driver Data)
+// ==========================================
+function cleanPrice(val) {
+    if (!val) return 0;
+    // Remove everything except numbers and decimals
+    const cleaned = String(val).replace(/[^0-9.]/g, '');
+    return parseFloat(cleaned) || 0;
+}
+// ==========================================
+// FINAL UPDATED: PDF EXPORT (Fixes NaN + Driver Stats)
+// ==========================================
 async function exportDashboardPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('p', 'mm', 'a4');
 
-    /* =====================
-       COLORS (Tailwind Blue-600)
-       #2563eb → rgb(37, 99, 235)
-    ===================== */
-    const PRIMARY = [37, 99, 235];
-    const DARK = [30, 30, 30];
+    // Branding Colors
+    const PRIMARY_BLUE = [37, 99, 235];    
+    const SUCCESS_GREEN = [22, 163, 74];   
+    const DARK_TEXT = [30, 41, 59];
 
-    /* =====================
-       FETCH LIVE DATA
-    ===================== */
-    const { data: cars } = await window.supabase
-        .from('cars')
-        .select('*');
+    // --- HELPER: Clean NaN Errors ---
+    const toNum = (val) => {
+        if (!val) return 0;
+        // Removes everything except numbers and decimals to prevent NaN
+        const cleaned = String(val).replace(/[^0-9.]/g, '');
+        return parseFloat(cleaned) || 0;
+    };
 
-    const { data: bookings } = await window.supabase
-        .from('bookings')
-        .select('total_amount, created_at')
-        .neq('booking_status', 'cancelled');
+    try {
+        /* 1. FETCH LIVE DATA */
+        const { data: cars } = await window.supabase.from('cars').select('*');
+        const { data: bookings } = await window.supabase.from('bookings').select('total_amount, created_at, with_driver').neq('booking_status', 'cancelled');
+        const { data: drivers } = await window.supabase.from('users').select('id, driver_status').eq('is_driver', true);
 
-    /* =====================
-       CALCULATIONS
-    ===================== */
-    const totalCars = cars.length;
-    const availableCars = cars.filter(c => c.status !== 'unavailable').length;
-    const unavailableCars = totalCars - availableCars;
-    const totalBookings = bookings.length;
+        /* 2. CALCULATIONS */
+        const totalCars = cars?.length || 0;
+        const totalDrivers = drivers?.length || 0;
+        const activeDrivers = drivers?.filter(d => d.driver_status === 'approved').length || 0;
+        
+        const currentMonth = new Date().getMonth();
+        const monthlyRevenue = (bookings || [])
+            .filter(b => new Date(b.created_at).getMonth() === currentMonth)
+            .reduce((sum, b) => sum + toNum(b.total_amount), 0); // Uses toNum helper
 
-    const currentMonth = new Date().getMonth();
-    const monthlyRevenue = bookings
-        .filter(b => new Date(b.created_at).getMonth() === currentMonth)
-        .reduce((sum, b) => sum + Number(b.total_amount || 0), 0);
+        /* 3. HEADER DESIGN */
+        doc.setFillColor(...PRIMARY_BLUE);
+        doc.rect(0, 0, 210, 35, 'F'); 
 
-    /* =====================
-       HEADER BAR
-    ===================== */
-    doc.setFillColor(...PRIMARY);
-    doc.rect(0, 0, 210, 22, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(22);
+        doc.setFont("helvetica", "bold");
+        doc.text('CAR RENTAL ADMIN', 14, 18);
+        
+        const generatedAt = new Date().toLocaleString('en-IN', {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit', hour12: true
+        });
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text(`Report Date: ${generatedAt}`, 145, 18);
 
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(16);
-    doc.text('ADMIN DASHBOARD REPORT', 14, 14);
+        /* 4. METRIC CARDS */
+        let y = 50;
+        doc.setTextColor(...DARK_TEXT);
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.text('Executive Summary', 14, y);
 
-    doc.setFontSize(9);
-    // doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 150, 14);
-const generatedAt = new Date().toLocaleString('en-IN', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true
-});
+        const drawStat = (label, value, x, y) => {
+            doc.setFillColor(248, 250, 252); 
+            doc.roundedRect(x, y + 2, 45, 20, 3, 3, 'F');
+            doc.setFontSize(9);
+            doc.setTextColor(71, 85, 105);
+            doc.text(label, x + 5, y + 10);
+            doc.setFontSize(12);
+            doc.setTextColor(...PRIMARY_BLUE);
+            doc.text(String(value), x + 5, y + 18);
+        };
 
-doc.text(`Generated on: ${generatedAt}`, 120, 14);
+        drawStat('Total Fleet', totalCars, 14, y);
+        drawStat('Total Drivers', totalDrivers, 63, y);
+        drawStat('Active Drivers', activeDrivers, 112, y);
+        drawStat('Monthly Revenue', `Rs. ${monthlyRevenue.toLocaleString('en-IN')}`, 161, y);
 
-    /* =====================
-       DASHBOARD SUMMARY
-    ===================== */
-    let y = 38;
-    doc.setTextColor(...DARK);
-    doc.setFontSize(14);
-    doc.text('Dashboard Summary', 14, y);
+        /* 5. FLEET TABLE (CLEANED DATA) */
+        y += 45;
+        doc.setTextColor(...DARK_TEXT);
+        doc.setFont("helvetica", "bold");
+        doc.text('Fleet Inventory Status', 14, y);
 
-    doc.setFontSize(11);
-    y += 10;
-    doc.text(`Total Cars: ${totalCars}`, 14, y);
-    doc.text(`Available Cars: ${availableCars}`, 80, y);
+        const tableData = (cars || []).map(car => [
+            car.name || 'Unknown',
+            car.type || '-',
+            `Rs. ${toNum(car.price).toLocaleString('en-IN')}`, // Cleans car price before formatting
+            car.fuel || '-',
+            car.status === 'unavailable' ? 'Out of Service' : 'Available'
+        ]);
 
-    y += 8;
-    doc.text(`Unavailable Cars: ${unavailableCars}`, 14, y);
-    doc.text(`Total Bookings: ${totalBookings}`, 80, y);
-
-    /* =====================
-       MONTHLY REVENUE BOX
-    ===================== */
-    y += 18;
-    doc.setFillColor(241, 245, 249);
-    doc.rect(14, y - 8, 180, 18, 'F');
-
-    doc.setFontSize(13);
-    doc.text('Monthly Revenue', 16, y);
-
-    doc.setFontSize(12);
-    doc.text(`Rs. ${monthlyRevenue.toLocaleString()}`, 150, y);
-
-    /* =====================
-       CARS TABLE
-    ===================== */
-    y += 16;
-
-  const tableData = cars.map(car => [
-    car.name || '-',
-    car.type || '-',
-    car.fuel || '-',
-    car.transmission || '-',
-    `Rs. ${formatPrice(car.price)}`,   // 👈 ONLY PRICE
-    car.status === 'unavailable' ? 'Unavailable' : 'Available'
-]);
-
-    doc.autoTable({
-        startY: y,
-        head: [['Name', 'Type', 'Fuel', 'Transmission', 'Price / Day', 'Status']],
-        body: tableData,
-        theme: 'grid',
-        styles: {
-            fontSize: 10,
-            cellPadding: 4,
-            textColor: DARK
-        },
-        headStyles: {
-            fillColor: PRIMARY,
-            textColor: [255, 255, 255],
-            fontStyle: 'bold'
-        },
-        columnStyles: {
-            4: { halign: 'right' },
-            5: { halign: 'center' }
-        },
-        didParseCell: function (data) {
-            if (data.section === 'body' && data.column.index === 5) {
-                if (data.cell.text[0] === 'Available') {
-                    data.cell.styles.textColor = [22, 163, 74]; // green
-                } else {
-                    data.cell.styles.textColor = [220, 38, 38]; // red
+        doc.autoTable({
+            startY: y + 4,
+            head: [['Vehicle Name', 'Category', 'Price/Day', 'Fuel', 'Status']],
+            body: tableData,
+            theme: 'striped',
+            headStyles: { fillColor: PRIMARY_BLUE, fontSize: 10 },
+            styles: { fontSize: 9, cellPadding: 4 },
+            columnStyles: {
+                2: { halign: 'right' }, // Align Price column to right
+                4: { fontStyle: 'bold' }
+            },
+            didParseCell: function (data) {
+                if (data.section === 'body' && data.column.index === 4) {
+                    data.cell.styles.textColor = (data.cell.text[0] === 'Available') ? SUCCESS_GREEN : [220, 38, 38];
                 }
             }
-        }
-    });
+        });
 
-    /* =====================
-       SAVE FILE
-    ===================== */
-    const d = new Date();
-    doc.save(`dashboard_report_${d.getFullYear()}_${d.getMonth() + 1}.pdf`);
+        /* 6. SAVE FILE */
+        const fileName = `Admin_Report_${new Date().toISOString().slice(0,10)}.pdf`;
+        doc.save(fileName);
+        showNotification("PDF Exported Successfully!", "success");
+
+    } catch (err) {
+        console.error("Export Error:", err);
+        showNotification("Failed to generate PDF", "error");
+    }
 }
 document.addEventListener('DOMContentLoaded', () => {
     const exportBtn = document.getElementById('exportPdfBtn');
